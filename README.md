@@ -9,7 +9,7 @@ for line in $(cat xf_genbank_links.txt); do wget $line .; done
 ```
 gunzip GCA_*
 ```
-* *or* *
+or
 ```
 gzip -d GCA_*
 ```
