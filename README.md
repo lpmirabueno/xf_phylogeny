@@ -7,6 +7,10 @@ for line in $(cat xf_genbank_links.txt); do wget $line .; done
 ```
 ## 2. Unzip all downloaded sequences.
 ```
-gunzip GCA_* * *or* * gzip -d GCA_*
+gunzip GCA_*
+```
+* *or* *
+```
+gzip -d GCA_*
 ```
 ## 3. Change FASTA file names to their GenBank accession numbers.
