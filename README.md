@@ -14,3 +14,6 @@ or
 gzip -d GCA_*
 ```
 ## 3. Change FASTA file names to their GenBank accession numbers.
+```
+for file in GCA_*; do mv $file $(head -1 $file | sed 's/ .*//' | sed 's/>//').fasta; done
+```
