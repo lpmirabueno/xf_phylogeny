@@ -18,4 +18,4 @@ gzip -d GCA_*
 for file in GCA_*; do mv $file $(head -1 $file | sed 's/ .*//' | sed 's/>//').fasta; done
 ```
 ## 4. Download annotation files (.gbff) from GenBank.
-Repeat steps 1. and 2. for this, but instead using the [xf-gbff_genbank_links.txt](https://github.com/mirloupa/xf_phylogeny/blob/master/xf-gbff_genbank_links.txt) file.
+Repeat steps 1. and 2. for this, but instead using the [xf-gbff_genbank_links.txt](https://github.com/mirloupa/xf_phylogeny/blob/master/xf-gbff_genbank_links.txt) file, which contains FTP links to the annotation files.
