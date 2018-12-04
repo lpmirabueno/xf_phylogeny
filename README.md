@@ -19,3 +19,7 @@ for file in GCA_*; do mv $file $(head -1 $file | sed 's/ .*//' | sed 's/>//').fa
 ```
 ## 4. Download annotation files (.gbff) from GenBank.
 Repeat steps 1. and 2. for this, but instead using the [xf-gbff_genbank_links.txt](https://github.com/mirloupa/xf_phylogeny/blob/master/xf-gbff_genbank_links.txt) file, which contains FTP links to the annotation files.
+## 5. Change the annotation file names to their GenBank accession numbers and replace the .gbff extension with .gbk.
+```
+for file in *.gbff; do mv $file $(head -1 $file | tr -s ' ' | cut -d " " -f2).gbk; done
+```
