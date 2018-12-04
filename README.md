@@ -17,3 +17,4 @@ gzip -d GCA_*
 ```
 for file in GCA_*; do mv $file $(head -1 $file | sed 's/ .*//' | sed 's/>//').fasta; done
 ```
+## 4. Download annotation files (.gbff) from GenBank. Repeat steps 1.-2. for this.
