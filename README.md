@@ -1,4 +1,4 @@
-# *Xylella fastidiosa* (Xf) phylogeny
+# *Xylella fastidiosa* (Xf) annotation using Prokka
 Pipeline to create a phylogeny using 44 publicly available Xf genomes from GenBank.
 ## 1. Download Xf genomic sequences from GenBank.
 The FTP links to the currently 44 publicly available Xf genomes on GenBank (dated 11/2018) are saved in [xf-fna_genbank_links.txt](https://github.com/mirloupa/xf_phylogeny/blob/master/xf-fna_genbank_links.txt). Use the following bash script to download all sequences in the file to your current directory:
