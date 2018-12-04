@@ -23,3 +23,11 @@ Repeat steps 1. and 2. for this, but instead using the [xf-gbff_genbank_links.tx
 ```
 for file in *.gbff; do mv $file $(head -1 $file | tr -s ' ' | cut -d " " -f2).gbk; done
 ```
+## 6. Create a Genus database using Prokka (see https://github.com/tseemann/prokka for documentation)
+```
+prokka-genbank_to_fasta_db *.gbk > xf_v2.faa
+cd-hit -i Coccus.faa -o Coccus -T 0 -M 0 -g 1 -s 0.8 -c 0.9
+rm -fv xf_v2.faa xf_v2.bak.clstr xf_v2.clstr
+makeblastdb -dbtype prot -in xf_v2
+mv xf_v2.p* /home/hulinm/local/src/prokka/db/genus/
+```
