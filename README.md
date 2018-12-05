@@ -34,7 +34,7 @@ mv xf_v2.p* /home/hulinm/local/src/prokka/db/genus/
 ## 7. Run Prokka and compress (gzip) files.
 See https://github.com/tseemann/prokka for documentation.
 ```
-for file in *.fasta ; do file_short=$(basename $file | sed s/".fasta"//g) prokka --usegenus --genus xf_v2 $file --outdir $file_short -----force gzip $file; done
+for file in *.fasta ; do file_short=$(basename $file | sed s/".fasta"//g) prokka --usegenus --genus xf_v2 $file --outdir $file_short -----force Gzip $file; done
 ```
 ## 8. Filter genomes based on Levy et al (2018) GWAS paper.
 #### Run quast.py on all FASTA files
@@ -50,4 +50,22 @@ cut -f1 -d " " report2.txt | uniq > report3.txt
 #### Run quast.py on all genomes to get report and save in a new directory named 'Filtered':
 ```
 for file in $(cat report3.txt); do cp "$file".fasta ./Filtered/; done
+```
+## 9. Run CheckM on filtered genomes.
+```
+for file in ./*.fasta ; do
+  file_short=$(basename $file | sed s/".fasta"//g) 
+  echo $file_short 
+  #mkdir -p ./checkm/"$file_short"/checkm 
+  #cp $file ./checkm/"$file_short" 
+
+  Jobs=$(qstat | grep 'checkm' | wc -l) 
+
+  while [ $Jobs -gt 7 ]; do 
+    sleep 10 printf "." 
+    Jobs=$(qstat | grep 'checkm' | wc -l) 
+  done
+
+  qsub /home/hulinm/git_repos/pseudomonas/sub_checkm.sh /home/hulinm/frankia/genomes/filtered/checkm/"$file_short" /home/hulinm/frankia/genomes/filtered/checkm/"$file_short"/checkm 
+done
 ```
