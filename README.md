@@ -56,16 +56,14 @@ for file in $(cat report3.txt); do cp "$file".fasta ./Filtered/; done
 for file in ./*.fasta ; do
   file_short=$(basename $file | sed s/".fasta"//g) 
   echo $file_short 
-  #mkdir -p ./checkm/"$file_short"/checkm 
-  #cp $file ./checkm/"$file_short" 
-
-  Jobs=$(qstat | grep 'checkm' | wc -l) 
-
-  while [ $Jobs -gt 7 ]; do 
-    sleep 10 printf "." 
-    Jobs=$(qstat | grep 'checkm' | wc -l) 
-  done
-
-  qsub /home/hulinm/git_repos/pseudomonas/sub_checkm.sh /home/hulinm/frankia/genomes/filtered/checkm/"$file_short" /home/hulinm/frankia/genomes/filtered/checkm/"$file_short"/checkm 
+  #mkdir -p ./Checkm/"$file_short"/Checkm 
+  #cp $file ./Checkm/"$file_short" 
+  Jobs=$(qstat | grep -i 'checkm' | wc -l) 
+    while [ $Jobs -gt 7 ]; do 
+      sleep 10
+      printf "." 
+      Jobs=$(qstat | grep -i 'checkm' | wc -l) 
+    done
+  qsub ~/sub_checkm.pbs Checkm/"$file_short" Checkm/"$file_short"/Checkm 
 done
 ```
