@@ -32,6 +32,7 @@ makeblastdb -dbtype prot -in xf_v2
 mv xf_v2.p* /home/hulinm/local/src/prokka/db/genus/
 ```
 ## 7. Run Prokka and compress (gzip) files.
+See https://github.com/tseemann/prokka for documentation.
 ```
 for file in *.fasta ; do file_short=$(basename $file | sed s/".fasta"//g) prokka --usegenus --genus xf_v2 $file --outdir $file_short -----force gzip $file; done
 ```
