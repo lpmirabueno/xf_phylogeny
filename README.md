@@ -36,3 +36,14 @@ See https://github.com/tseemann/prokka for documentation.
 ```
 for file in *.fasta ; do file_short=$(basename $file | sed s/".fasta"//g) prokka --usegenus --genus xf_v2 $file --outdir $file_short -----force gzip $file; done
 ```
+## 8. Filter genomes based on Levy et al (2018) GWAS paper.
+#### Extract N50 >=40kbp from genomes and save column:
+```
+python /home/hulinm/git_repos/tools/analysis/python_effector_scripts/extract_N50filtered_genomes.py *.fasta > report2.txt
+cut -f1 -d " " report2.txt | uniq > report3.txt 
+```
+
+#### Run quast.py on all genomes to get report:
+```
+for file in $(cat report3.txt); do cp "$file".fa ./filtered/; done
+```
