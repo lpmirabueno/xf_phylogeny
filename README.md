@@ -18,7 +18,7 @@ gzip -d GCA_*
 for file in GCA_*; do mv $file $(head -1 $file | sed 's/ .*//' | sed 's/>//').fasta; done
 ```
 ## 4. Download annotation files (.gbff) from GenBank.
-Repeat steps 1. and 2. for this, but instead using the [xf-gbff_genbank_links.txt](https://github.com/mirloupa/xf_phylogeny/blob/master/xf-gbff_genbank_links.txt) file, which contains FTP links to the annotation files.
+Repeat steps 1 and 2 for this, but instead using the [xf-gbff_genbank_links.txt](https://github.com/mirloupa/xf_phylogeny/blob/master/xf-gbff_genbank_links.txt) file, which contains FTP links to the annotation files.
 ## 5. Change the annotation file names to their GenBank accession numbers and replace the .gbff extension with .gbk.
 ```
 for file in *.gbff; do mv $file $(head -1 $file | tr -s ' ' | cut -d " " -f2).gbk; done
@@ -51,7 +51,7 @@ cut -f1 -d " " report2.txt | uniq > report3.txt
 ```
 for file in $(cat report3.txt); do cp "$file".fasta ./Filtered/; done
 ```
-## 9. Run CheckM on filtered genomes.
+## 9. Run CheckM on filtered genomes from step 8.
 ```
 for file in ./*.fasta ; do
   file_short=$(basename $file | sed s/".fasta"//g) 
@@ -65,5 +65,10 @@ for file in ./*.fasta ; do
       Jobs=$(qstat | grep -i 'checkm' | wc -l) 
     done
   qsub ~/sub_checkm.pbs Checkm/"$file_short" Checkm/"$file_short"/Checkm 
+done
+
+for file in ./*fasta; do
+  file_short=$(basename $file | sed s/".fasta"//g)
+  checkm qa Checkm/"$file_short"/Checkm/lineage.ms Checkm/"$file_short"/Checkm > Checkm/"$file_short"/Checkm/report
 done
 ```
