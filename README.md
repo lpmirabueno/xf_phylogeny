@@ -52,7 +52,7 @@ cut -f1 -d " " report2.txt | uniq > report3.txt
 for file in $(cat report3.txt); do cp "$file".fasta ./Filtered/; done
 ```
 ## 9. Run CheckM on filtered genomes from step 8.
-Can only run on blacklace01 or blacklace 06. 
+This can only run on blacklace01 or blacklace 06. 
 ```
 for file in ./*.fasta ; do
   file_short=$(basename $file | sed s/".fasta"//g) 
