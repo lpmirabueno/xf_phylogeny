@@ -60,7 +60,7 @@ for file in ./*.fasta ; do
   #mkdir -p ./Checkm/"$file_short"/Checkm 
   #cp $file ./Checkm/"$file_short" 
   Jobs=$(qstat | grep -i 'checkm' | wc -l) 
-    while [ $Jobs -gt 7 ]; do 
+    while [ $Jobs -gt 5 ]; do 
       sleep 10
       printf "." 
       Jobs=$(qstat | grep -i 'checkm' | wc -l) 
