@@ -67,9 +67,12 @@ for file in ./*.fasta ; do
     done
   qsub ~/sub_checkm.pbs Checkm/"$file_short" Checkm/"$file_short"/Checkm 
 done
-
+```
+```
 for file in ./*fasta; do
   file_short=$(basename $file | sed s/".fasta"//g)
   checkm qa Checkm/"$file_short"/Checkm/lineage.ms Checkm/"$file_short"/Checkm > Checkm/"$file_short"/Checkm/report
 done
+```
+
 ```
