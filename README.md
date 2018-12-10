@@ -33,7 +33,7 @@ done
 ## 6. Create a Genus database using Prokka.
 ```
 prokka-genbank_to_fasta_db *.gbk > xf_v2.faa
-cd-hit -i Coccus.faa -o Coccus -T 0 -M 0 -g 1 -s 0.8 -c 0.9
+cd-hit -i xf_v2.faa -o xf_v2 -T 0 -M 0 -g 1 -s 0.8 -c 0.9
 rm -fv xf_v2.faa xf_v2.bak.clstr xf_v2.clstr
 makeblastdb -dbtype prot -in xf_v2
 mv xf_v2.p* /home/hulinm/local/src/prokka/db/genus/
@@ -43,14 +43,14 @@ See https://github.com/tseemann/prokka for documentation.
 ```
 for file in *.fasta; do
   file_short=$(basename $file | sed s/".fasta"//g)
-  prokka --usegenus --genus xf_v2 $file --outdir $file_short --force
+  prokka --usegenus --genus xf_v2 $file --outdir $file_short
   gzip $file
 done
 ```
 ## 8. Filter genomes based on Levy et al (2018) GWAS paper.
 #### Run quast.py on all FASTA files
 ```
-quast.py *.fasta
+quast.py *.fasta.gz
 ```
 #### Filter genomes based on N50 >=40kbp and save only unique genomes into a new file:
 ```
@@ -58,8 +58,9 @@ python /home/hulinm/git_repos/tools/analysis/python_effector_scripts/extract_N50
 cut -f1 -d " " report2.txt | uniq > report3.txt 
 ```
 
-#### Run quast.py on all genomes to get report and save in a new directory named 'Filtered':
+#### Save reported genomes in a new directory named 'Filtered':
 ```
+mkdir Filtered
 for file in $(cat report3.txt); do
   cp "$file".fasta ./Filtered/
 done
@@ -88,12 +89,12 @@ for file in ./*fasta; do
   checkm qa Checkm/"$file_short"/Checkm/lineage.ms Checkm/"$file_short"/Checkm > Checkm/"$file_short"/Checkm/report
 done
 ```
-## 10. Perform orthology analysis on Filtered, clean genomes using OrthoFinder.
-Rename ffn files to contain genome name not PROKKA output:
+## 10. Perform orthology analysis on filtered, clean genomes using OrthoFinder.
+Rename .ffn files (from PROKKA output) to contain genome name not PROKKA output:
 ```
 for file in *.fasta; do
-  file_short=$(basename $file | sed s/".fasta"//g)
+  file_short=$(basename $file | sed s/".fa"//g)
   echo $file_short
-  cp ../Gzip/"$file_short"/"$file_short".faa ../Gzip/"$file_short"/"$file_short".faa
+  cp Xf_genomes/"$file_short"/.faa Xf_genomes/"$file_short"/"$file_short".faa
 done
 ```
