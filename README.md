@@ -95,6 +95,6 @@ Rename .ffn files (from PROKKA output) to contain genome name not PROKKA output:
 for file in *.fasta; do
   file_short=$(basename $file | sed s/".fa"//g)
   echo $file_short
-  cp Xf_genomes/"$file_short"/.faa Xf_genomes/"$file_short"/"$file_short".faa
+  cp /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/"$file_short"/.faa /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/"$file_short"/"$file_short".faa
 done
 ```
