@@ -68,11 +68,19 @@ for file in ./*.fasta ; do
   qsub ~/sub_checkm.pbs Checkm/"$file_short" Checkm/"$file_short"/Checkm 
 done
 ```
+Run CheckM report:
 ```
 for file in ./*fasta; do
   file_short=$(basename $file | sed s/".fasta"//g)
   checkm qa Checkm/"$file_short"/Checkm/lineage.ms Checkm/"$file_short"/Checkm > Checkm/"$file_short"/Checkm/report
 done
 ```
-
+## 10. Orthology analysis using OrthoFinder.
+Rename ffn files to contain genome name not PROKKA output:
+```
+for file in /home/hulinm/frankia/genomes/.fa; do
+  file_short=$(basename $file | sed s/".fa"//g)
+  echo $file_short
+  cp /home/hulinm/frankia/annotation/"$file_short"/.faa /home/hulinm/frankia/annotation/"$file_short"/"$file_short".faa
+done
 ```
