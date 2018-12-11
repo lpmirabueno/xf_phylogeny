@@ -96,17 +96,17 @@ for file in ./*fasta; do
 done
 ```
 ## 10. Perform orthology analysis on filtered, clean genomes using OrthoFinder.
-Rename .ffn files (from PROKKA output) to contain genome name not PROKKA output:
+Rename .faa files (from PROKKA output) to contain genome name not PROKKA output:
 ```
-for file in /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/*.fasta; do
-  file_short=$(basename $file | sed s/".fasta"//g)
+for file in /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/*.fasta.gz; do
+  file_short=$(basename $file | sed s/".fasta.gz"//g)
   echo $file_short
-  cp /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/"$file_short"/.faa /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/"$file_short"/"$file_short".faa
+  cp /home/mirabl/Xf_proj/Ncbi_44/Annotation/"$file_short"/*.faa /home/mirabl/Xf_proj/Ncbi_44/Annotation/"$file_short"/"$file_short".faa
 done
 ```
 ## 11. Move all .faa files to OrthoMCL directory within /home/hulinm/frankia/analysis/orthofinder/formatted.
 ```
-cp /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes//.faa /home/hulinm/frankia/analysis/orthofinder/formatted
+cp /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/*/*.faa /home/mirabl/Xf_proj/Ncbi_44/OrthoFinder/Formatted
 ```
 ## 12. Modify all fasta files to remove description, which is the correct format for OrthoMCL.
 Each fasta item must be in format of strain|peg.number
