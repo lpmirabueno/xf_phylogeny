@@ -66,7 +66,7 @@ for file in $(cat report3.txt); do
 done
 ```
 ## 9. Run CheckM on filtered genomes from step 8.
-This can only run on blacklace01 or blacklace 06. 
+CheckM can only be run on blacklace01 or blacklace 06. 
 ```
 for file in ./*.fasta ; do
   file_short=$(basename $file | sed s/".fasta"//g) 
@@ -92,7 +92,7 @@ done
 ## 10. Perform orthology analysis on filtered, clean genomes using OrthoFinder.
 Rename .ffn files (from PROKKA output) to contain genome name not PROKKA output:
 ```
-for file in *.fasta; do
+for file in /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/*.fasta; do
   file_short=$(basename $file | sed s/".fasta"//g)
   echo $file_short
   cp /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/"$file_short"/.faa /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/"$file_short"/"$file_short".faa
@@ -108,11 +108,11 @@ Each fasta item must be in format of strain|peg.number
 for file in /home/hulinm/frankia/analysis/.faa; do
   file_short=$(basename $file | sed s/".faa"//g | cut -f1 -d ".")
   echo $file_short
-  sed -e 's/^(>[^[:space:]]).*/\1/' $file | sed s/"_"/"|peg."/g > "$file_short".fa
+  sed -e 's/^(>[^[:space:]]).*/\1/' $file | sed s/"_"/"|peg."/g > "$file_short".fasta
 done
 
-for file in /home/hulinm/frankia/analysis/*.fa; do
-  id=$(less $file | grep ">" | cut -f1 -d "|" | sed s/">"//g | uniq) file_short=$(basename $file | sed s/".fa"//g)
+for file in /home/hulinm/frankia/analysis/*.fasta; do
+  id=$(less $file | grep ">" | cut -f1 -d "|" | sed s/">"//g | uniq) file_short=$(basename $file | sed s/".fasta"//g)
   echo $id
   echo $file_short
   sed s/"$id"/"$file_short"/g $file > $file_short.fasta
@@ -120,8 +120,8 @@ done
 ```
 ## 13. Remove manually those that did not pass CheckM and also those that did not pass N50 limit.
 ```
-for file in /home/hulinm/frankia/genomes/filtered/*.fa; do
-  file_short=$(basename $file | sed s/".fa"//g | cut -f1,2 -d _ | cut -f1 -d .)
+for file in /home/mirabl/Xf_proj/Ncbi_44/Filtered/*.fasta; do
+  file_short=$(basename $file | sed s/".fasta"//g | cut -f1,2 -d _ | cut -f1 -d .)
   echo $file_short
   mv /home/hulinm/frankia/analysis/"$file_short".fasta /home/hulinm/frankia/analysis/orthofinder/formatted/"$file_short".fasta
 done
