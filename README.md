@@ -66,9 +66,9 @@ cut -f1 -d " " report2.txt | uniq > report3.txt
 
 #### Save reported genomes in a new directory named 'Filtered':
 ```
-mkdir Filtered
+mkdir /home/mirabl/Xf_proj/Ncbi_44/Filtered
 for file in $(cat report3.txt); do
-  cp "$file".fasta ./Filtered/
+  cp "$file".fasta /home/mirabl/Xf_proj/Ncbi_44/Filtered/
 done
 ```
 ## 9. Run CheckM on filtered genomes from step 8.
