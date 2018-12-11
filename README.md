@@ -110,7 +110,9 @@ for file in /home/hulinm/frankia/analysis/.faa; do
   echo $file_short
   sed -e 's/^(>[^[:space:]]).*/\1/' $file | sed s/"_"/"|peg."/g > "$file_short".fasta
 done
+```
 
+```
 for file in /home/hulinm/frankia/analysis/*.fasta; do
   id=$(less $file | grep ">" | cut -f1 -d "|" | sed s/">"//g | uniq) file_short=$(basename $file | sed s/".fasta"//g)
   echo $id
