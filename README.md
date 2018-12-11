@@ -98,3 +98,58 @@ for file in *.fasta; do
   cp /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/"$file_short"/.faa /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/"$file_short"/"$file_short".faa
 done
 ```
+## 11. Move all .faa files to OrthoMCL directory within /home/hulinm/frankia/analysis/orthofinder/formatted.
+```
+cp /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes//.faa /home/hulinm/frankia/analysis/orthofinder/formatted
+```
+## 12. Modify all fasta files to remove description, which is the correct format for OrthoMCL.
+Each fasta item must be in format of strain|peg.number
+```
+for file in /home/hulinm/frankia/analysis/.faa; do
+  file_short=$(basename $file | sed s/".faa"//g | cut -f1 -d ".")
+  echo $file_short
+  sed -e 's/^(>[^[:space:]]).*/\1/' $file | sed s/"_"/"|peg."/g > "$file_short".fa
+done
+
+for file in /home/hulinm/frankia/analysis/*.fa; do
+  id=$(less $file | grep ">" | cut -f1 -d "|" | sed s/">"//g | uniq) file_short=$(basename $file | sed s/".fa"//g)
+  echo $id
+  echo $file_short
+  sed s/"$id"/"$file_short"/g $file > $file_short.fasta
+done
+```
+## 13. Remove manually those that did not pass CheckM and also those that did not pass N50 limit.
+```
+for file in /home/hulinm/frankia/genomes/filtered/*.fa; do
+  file_short=$(basename $file | sed s/".fa"//g | cut -f1,2 -d _ | cut -f1 -d .)
+  echo $file_short
+  mv /home/hulinm/frankia/analysis/"$file_short".fasta /home/hulinm/frankia/analysis/orthofinder/formatted/"$file_short".fasta
+done
+```
+## 14. Run OrthoFinder.
+```
+/home/hulinm/local/src/OrthoFinder-2.2.7_source/orthofinder/orthofinder.py -f formatted -t 16 -S diamond
+```
+## 15. Run BLAST on nod genes.
+```
+for GENOME in /home/hulinm/frankia/genomes/*.fna; do
+  GENOME_FILE=$(basename $GENOME)
+  GENOME_SHORT=$(echo $GENOME_FILE | sed s/.fna//g)
+  echo $GENOME_SHORT
+  python /home/hulinm/git_repos/tools/analysis/python_effector_scripts/rename.py -i "$GENOME_SHORT".fna -o "$GENOME_SHORT".fa
+  gzip "$GENOME_SHORT".fna
+  
+  for genome in /home/hulinm/frankia/genomes/*.fa; do
+    echo $genome
+    file=$(basename $genome) genome_short=$(echo $file | sed s/.fa//g)
+    echo $genome_short
+
+    for query in /home/hulinm/frankia/nod_genes/*.fa; do
+      echo $query
+      query_short=$(basename $query | sed s/.fa//g)
+  
+    /home/hulinm/git_repos/tools/pathogen/blast/blast2csv.pl $query tblastn $genome 5 > /home/hulinm/frankia/nod_genes/blast/"$genome_short"_"$query_short"
+    done
+  done
+done
+```
