@@ -32,22 +32,23 @@ done
 ```
 ## 6. Create a Genus database using Prokka.
 ```
-prokka-genbank_to_fasta_db *.gbk > xf_v2.faa
-cd-hit -i xf_v2.faa -o xf_v2 -T 0 -M 0 -g 1 -s 0.8 -c 0.9
-rm -fv xf_v2.faa xf_v2.bak.clstr xf_v2.clstr
-makeblastdb -dbtype prot -in xf_v2
-mv xf_v2.p* /home/hulinm/local/src/prokka/db/genus/
+prokka-genbank_to_fasta_db /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/*.gbk > /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/xf_v2.faa
+cd-hit -i /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/xf_v2.faa -o /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/xf_v2 -T 0 -M 0 -g 1 -s 0.8 -c 0.9
+rm -fv /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/xf_v2.faa /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/xf_v2.bak.clstr /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/xf_v2.clstr
+makeblastdb -dbtype prot -in /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/xf_v2
+mkdir /home/mirabl/Xf_proj/Ncbi_44/DB_prokka
+mv /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/xf_v2.p* /home/mirabl/Xf_proj/Ncbi_44/DB_prokka/
 ```
 ## 7. Run Prokka and compress (gzip) files.
-See https://github.com/tseemann/prokka for documentation.
+#### See https://github.com/tseemann/prokka for documentation.
 ```
-for file in *.fasta; do
+for file in /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/*.fasta; do
   file_short=$(basename $file | sed s/".fasta"//g)
   prokka --usegenus --genus xf_v2 $file --outdir $file_short
   gzip $file
 done
 ```
-Move all annotated directories to a new directory named 'Annotation':
+#### Move all annotated directories to a new directory named 'Annotation':
 ```
 mv /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/*.1 /home/mirabl/Xf_proj/Ncbi_44/Annotation/
 mv /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/*.2 /home/mirabl/Xf_proj/Ncbi_44/Annotation/
@@ -71,7 +72,7 @@ for file in $(cat report3.txt); do
 done
 ```
 ## 9. Run CheckM on filtered genomes from step 8.
-CheckM can only be run on blacklace01 or blacklace 06. 
+#### CheckM can only be run on blacklace01 or blacklace 06. 
 ```
 for file in ./*.fasta ; do
   file_short=$(basename $file | sed s/".fasta"//g) 
@@ -87,7 +88,7 @@ for file in ./*.fasta ; do
   qsub ~/sub_checkm.pbs Checkm/"$file_short" Checkm/"$file_short"/Checkm 
 done
 ```
-Run CheckM report:
+#### Run CheckM report:
 ```
 for file in ./*fasta; do
   file_short=$(basename $file | sed s/".fasta"//g)
