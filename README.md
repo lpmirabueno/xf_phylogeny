@@ -47,6 +47,11 @@ for file in *.fasta; do
   gzip $file
 done
 ```
+Move all annotated directories to a new directory named 'Annotation':
+```
+mv /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/*.1 /home/mirabl/Xf_proj/Ncbi_44/Annotation/
+mv /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/*.2 /home/mirabl/Xf_proj/Ncbi_44/Annotation/
+```
 ## 8. Filter genomes based on Levy et al (2018) GWAS paper.
 #### Run quast.py on all FASTA files
 ```
