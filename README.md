@@ -103,41 +103,36 @@ for file in /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/*.fasta.gz; do
   cp /home/mirabl/Xf_proj/Ncbi_44/Annotation/"$file_short"/*.faa /home/mirabl/Xf_proj/Ncbi_44/Annotation/"$file_short"/"$file_short".faa
 done
 ```
-## 11. Copy all .faa files to a new directory.
+## 11. Copy all .faa files to a new directory named 'Analysis'.
 ```
-mkdir /home/mirabl/Xf_proj/Ncbi_44/OrthoFinder/Formatted
-cp /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/*/*.faa /home/mirabl/Xf_proj/Ncbi_44/OrthoFinder/Formatted
+mkdir /home/mirabl/Xf_proj/Ncbi_44/Analysis
+cp /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/*/*.faa /home/mirabl/Xf_proj/Ncbi_44/Analysis
 ```
 ## 12. Modify all fasta files to remove description, which is the correct format for OrthoMCL.
 Each fasta item must be in format of strain|peg.number
 ```
-for file in /home/mirabl/Xf_proj/Ncbi_44/OrthoFinder/Formatted/*.faa; do
+for file in /home/mirabl/Xf_proj/Ncbi_44/Analysis/*.faa; do
   file_short=$(basename $file | sed s/".faa"//g)
   echo $file_short
-  sed 's/ .*//' $file | sed s/"_"/"|peg."/g > /home/mirabl/Xf_proj/Ncbi_44/OrthoFinder/Formatted/"$file_short".fasta
-done
-  
-for file in /home/mirabl/Xf_proj/Ncbi_44/OrthoFinder/Formatted/*.faa; do
-  file_short=$(basename $file | sed s/".faa"//g | cut -f1 -d ".")
-  echo $file_short
-  sed -e 's/^(>[^[:space:]]).*/\1/' $file | sed s/"_"/"|peg."/g > /home/mirabl/Xf_proj/Ncbi_44/OrthoFinder/Formatted/"$file_short".fasta
+  sed 's/ .*//' $file | sed s/"_"/"|peg."/g > /home/mirabl/Xf_proj/Ncbi_44/Analysis/"$file_short".fa
 done
 ```
-
 ```
-for file in /home/mirabl/Xf_proj/Ncbi_44/OrthoFinder/Formatted/*.fasta; do
-  id=$(less $file | grep ">" | cut -f1 -d "|" | sed s/">"//g | uniq) file_short=$(basename $file | sed s/".fasta"//g)
+for file in /home/mirabl/Xf_proj/Ncbi_44/Analysis/*.fasta; do
+  id=$(less $file | grep ">" | cut -f1 -d "|" | sed s/">"//g | uniq)
+  file_short=$(basename $file | sed s/".fa"//g)
   echo $id
   echo $file_short
-  sed s/"$id"/"$file_short"/g $file > $file_short.fasta
+  sed s/"$id"/"$file_short"/g $file > /home/mirabl/Xf_proj/Ncbi_44/Analysis/$file_short.fasta
 done
 ```
-## 13. Remove manually those that did not pass CheckM and also those that did not pass N50 limit.
+## 13. Remove manually those that did not pass CheckM and also those that did not pass N50 limit and move to new directory OrthoFinder/Formatted
 ```
+mkdir /home/mirabl/Xf_proj/Ncbi_44/OrthoFinder/Formatted
 for file in /home/mirabl/Xf_proj/Ncbi_44/Filtered/*.fasta; do
-  file_short=$(basename $file | sed s/".fasta"//g | cut -f1,2 -d _ | cut -f1 -d .)
+  file_short=$(basename $file | sed s/".fasta"//g | cut -f1,2 -d _ )
   echo $file_short
-  mv /home/hulinm/frankia/analysis/"$file_short".fasta /home/hulinm/frankia/analysis/orthofinder/formatted/"$file_short".fasta
+  mv /home/mirabl/Xf_proj/Ncbi_44/Analysis/$file_short.fasta /home/mirabl/Xf_proj/Ncbi_44/OrthoFinder/Formatted/$file_short.fasta
 done
 ```
 ## 14. Run OrthoFinder.
