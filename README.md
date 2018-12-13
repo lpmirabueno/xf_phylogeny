@@ -137,11 +137,11 @@ done
 ```
 ## 14. Run OrthoFinder.
 ```
-/home/hulinm/local/src/OrthoFinder-2.2.7_source/orthofinder/orthofinder.py -f formatted -t 16 -S diamond
+/home/hulinm/local/src/OrthoFinder-2.2.7_source/orthofinder/orthofinder.py -f Formatted -t 16 -S diamond
 ```
 ## 15. Run BLAST on nod genes.
 ```
-for GENOME in /home/hulinm/frankia/genomes/*.fna; do
+for GENOME in /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/*.fna; do
   GENOME_FILE=$(basename $GENOME)
   GENOME_SHORT=$(echo $GENOME_FILE | sed s/.fna//g)
   echo $GENOME_SHORT
