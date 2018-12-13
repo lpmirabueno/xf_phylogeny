@@ -112,6 +112,12 @@ cp /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/*/*.faa /home/mirabl/Xf_proj/Ncbi_44/
 Each fasta item must be in format of strain|peg.number
 ```
 for file in /home/mirabl/Xf_proj/Ncbi_44/OrthoFinder/Formatted/*.faa; do
+  file_short=$(basename $file | sed s/".faa"//g)
+  echo $file_short
+  sed 's/ .*//' $file | sed s/"_"/"|peg."/g > /home/mirabl/Xf_proj/Ncbi_44/OrthoFinder/Formatted/"$file_short".fasta
+done
+  
+for file in /home/mirabl/Xf_proj/Ncbi_44/OrthoFinder/Formatted/*.faa; do
   file_short=$(basename $file | sed s/".faa"//g | cut -f1 -d ".")
   echo $file_short
   sed -e 's/^(>[^[:space:]]).*/\1/' $file | sed s/"_"/"|peg."/g > /home/mirabl/Xf_proj/Ncbi_44/OrthoFinder/Formatted/"$file_short".fasta
@@ -119,7 +125,7 @@ done
 ```
 
 ```
-for file in /home/hulinm/frankia/analysis/*.fasta; do
+for file in /home/mirabl/Xf_proj/Ncbi_44/OrthoFinder/Formatted/*.fasta; do
   id=$(less $file | grep ">" | cut -f1 -d "|" | sed s/">"//g | uniq) file_short=$(basename $file | sed s/".fasta"//g)
   echo $id
   echo $file_short
