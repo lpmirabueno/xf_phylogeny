@@ -136,6 +136,7 @@ for file in /home/mirabl/Xf_proj/Ncbi_44/Filtered/*.fasta; do
 done
 ```
 ## 14. Run OrthoFinder.
+Submit to HPC.
 ```
 /home/hulinm/local/src/OrthoFinder-2.2.7_source/orthofinder/orthofinder.py -f Formatted -t 16 -S diamond
 ```
