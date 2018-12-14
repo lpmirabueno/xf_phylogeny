@@ -39,7 +39,7 @@ mkdir /home/mirabl/Xf_proj/Ncbi_44/DB_prokka
 mv /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/xf_v2* /home/mirabl/Xf_proj/Ncbi_44/DB_prokka/
 ```
 ## 7. Run Prokka and compress (gzip) files.
-#### See https://github.com/tseemann/prokka for documentation.
+See https://github.com/tseemann/prokka for documentation.
 ```
 for file in /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/*.fasta; do
   file_short=$(basename $file | sed s/".fasta"//g)
@@ -47,23 +47,22 @@ for file in /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/*.fasta; do
   gzip /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/$file
 done
 ```
-#### Move all annotated directories to a new directory named 'Annotation':
+Move all annotated directories to a new directory named 'Annotation':
 ```
 mv /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/*.1 /home/mirabl/Xf_proj/Ncbi_44/Annotation/
 mv /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/*.2 /home/mirabl/Xf_proj/Ncbi_44/Annotation/
 ```
 ## 8. Filter genomes based on Levy et al (2018) GWAS paper.
-#### Run quast.py on all FASTA files
+Run quast.py on all FASTA files
 ```
 quast.py /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/*.fasta.gz
 ```
-#### Filter genomes based on N50 >=40kbp and save only unique genomes into a new file:
+Filter genomes based on N50 >=40kbp and save only unique genomes into a new file:
 ```
 python /home/hulinm/git_repos/tools/analysis/python_effector_scripts/extract_N50filtered_genomes.py /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/Quast_results/results_2018_12_10_14_08_42/transposed_report.tsv > /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/report2.txt
 cut -f1 -d " " /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/report2.txt | uniq > /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/report3.txt 
 ```
-
-#### Save reported genomes in a new directory named 'Filtered':
+Save reported genomes in a new directory named 'Filtered':
 ```
 mkdir /home/mirabl/Xf_proj/Ncbi_44/Filtered
 for file in /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/$(cat report3.txt); do
@@ -71,7 +70,7 @@ for file in /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/$(cat report3.txt); do
 done
 ```
 ## 9. Run CheckM on filtered genomes from step 8.
-#### CheckM can only be run on blacklace01 or blacklace 06. 
+This script submits the jobs to HPC. CheckM can only be run on blacklace01 or blacklace 06. 
 ```
 for file in /home/mirabl/Xf_proj/Ncbi_44/Filtered/*.fasta ; do
   file_short=$(basename $file | sed s/".fasta"//g) 
@@ -87,7 +86,7 @@ for file in /home/mirabl/Xf_proj/Ncbi_44/Filtered/*.fasta ; do
   qsub /home/mirabl/sub_checkm.pbs /home/mirabl/Xf_proj/Ncbi_44/Filtered/Checkm/"$file_short" /home/mirabl/Xf_proj/Ncbi_44/Filtered/Checkm/"$file_short"/Checkm 
 done
 ```
-#### Run CheckM report:
+Run CheckM report:
 ```
 for file in /home/mirabl/Xf_proj/Ncbi_44/Filtered/*fasta; do
   file_short=$(basename $file | sed s/".fasta"//g)
