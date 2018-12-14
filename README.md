@@ -139,26 +139,3 @@ Submit to HPC.
 ```
 /home/hulinm/local/src/OrthoFinder-2.2.7_source/orthofinder/orthofinder.py -f Formatted -t 16 -S diamond
 ```
-## 15. Run BLAST on nod genes.
-```
-for GENOME in /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/*.fna; do
-  GENOME_FILE=$(basename $GENOME)
-  GENOME_SHORT=$(echo $GENOME_FILE | sed s/.fna//g)
-  echo $GENOME_SHORT
-  python /home/hulinm/git_repos/tools/analysis/python_effector_scripts/rename.py -i "$GENOME_SHORT".fna -o "$GENOME_SHORT".fa
-  gzip "$GENOME_SHORT".fna
-  
-  for genome in /home/hulinm/frankia/genomes/*.fa; do
-    echo $genome
-    file=$(basename $genome) genome_short=$(echo $file | sed s/.fa//g)
-    echo $genome_short
-
-    for query in /home/hulinm/frankia/nod_genes/*.fa; do
-      echo $query
-      query_short=$(basename $query | sed s/.fa//g)
-  
-    /home/hulinm/git_repos/tools/pathogen/blast/blast2csv.pl $query tblastn $genome 5 > /home/hulinm/frankia/nod_genes/blast/"$genome_short"_"$query_short"
-    done
-  done
-done
-```
