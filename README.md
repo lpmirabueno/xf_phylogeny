@@ -7,7 +7,17 @@ for line in $(cat xf_genbank_links.txt); do
   wget $line /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes
 done
 ```
-Also download Xanthomonas genome (to be used as an outgroup).
+The following Xanthomonas represenative genomes (FASTA and annotation files also obtained from GenBank) were used as outgroups:
+*Xanthomonas campestris* pv. *campestris* str. ATCC 33913
+```
+wget ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/007/145/GCF_000007145.1_ASM714v1/GCF_000007145.1_ASM714v1_genomic.fna.gz
+wget ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/007/145/GCF_000007145.1_ASM714v1/GCF_000007145.1_ASM714v1_genomic.gbff.gz .
+```
+ *Xanthomonas oryzae* pv. *oryzae* PXO99A
+ ```
+wget ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/019/585/GCF_000019585.2_ASM1958v2/GCF_000019585.2_ASM1958v2_genomic.fna.gz .
+wget ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/019/585/GCF_000019585.2_ASM1958v2/GCF_000019585.2_ASM1958v2_genomic.gbff.gz .
+ ```
 ## 2. Unzip all downloaded sequences.
 ```
 gunzip GCA_*
