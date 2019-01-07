@@ -7,7 +7,7 @@ for line in $(cat xf_genbank_links.txt); do
   wget $line ~/Xf_proj/Ncbi_46/Genomes
 done
 ```
-The following Xanthomonas represenative genomes (FASTA and annotation files also obtained from GenBank) were used as outgroups:
+The following Xanthomonas represenative genomes (FASTA and annotation files also obtained from GenBank) were used as outgroups:  
 *Xanthomonas campestris* pv. *campestris* str. ATCC 33913
 ```
 wget ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/007/145/GCF_000007145.1_ASM714v1/GCF_000007145.1_ASM714v1_genomic.fna.gz ~/Xf_proj/Ncbi_46/Genomes
