@@ -43,3 +43,5 @@ ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/001/469/345/GCA_001469345.1_XYFPCFBP8
 ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/001/469/395/GCA_001469395.1_XYFPCFBP8073/*genomic.fna*
 ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/900/129/695/GCA_900129695.1_IMG-taxon_2595698223_annotated_assembly/*genomic.fna*
 ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/001/971/475/GCA_001971475.1_ASM197147v1/*genomic.fna*
+ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/003/973/705/GCA_003973705.1_ASM397370v1/*genomic.fna*
+ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/003/973/695/GCA_003973695.1_ASM397369v1/*genomic.fna*
