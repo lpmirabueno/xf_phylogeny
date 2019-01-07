@@ -85,18 +85,18 @@ done
 ## 9. Run CheckM on filtered genomes from step 8.
 This script submits the jobs to HPC. CheckM can only be run on blacklace01 or blacklace 06. 
 ```
-for file in /home/mirabl/Xf_proj/Ncbi_44/Filtered/*.fasta ; do
+for file in /home/mirabl/Xf_proj/Ncbi_46/Filtered/*.fasta ; do
   file_short=$(basename $file | sed s/".fasta"//g) 
   echo $file_short 
-  #mkdir -p /home/mirabl/Xf_proj/Ncbi_44/Filtered/Checkm/"$file_short"/Checkm 
-  #cp $file /home/mirabl/Xf_proj/Ncbi_44/Filtered/Checkm/"$file_short" 
+  #mkdir -p /home/mirabl/Xf_proj/Ncbi_46/Filtered/Checkm/"$file_short"/Checkm 
+  #cp $file /home/mirabl/Xf_proj/Ncbi_46/Filtered/Checkm/"$file_short" 
   Jobs=$(qstat | grep -i 'checkm' | wc -l) 
     while [ $Jobs -gt 5 ]; do 
       sleep 10
       printf "." 
       Jobs=$(qstat | grep -i 'checkm' | wc -l) 
     done
-  qsub /home/mirabl/sub_checkm.pbs /home/mirabl/Xf_proj/Ncbi_44/Filtered/Checkm/"$file_short" /home/mirabl/Xf_proj/Ncbi_44/Filtered/Checkm/"$file_short"/Checkm 
+  qsub /home/mirabl/SUB_PBS/Xf_proj/checkm.pbs /home/mirabl/Xf_proj/Ncbi_46/Filtered/Checkm/"$file_short" /home/mirabl/Xf_proj/Ncbi_46/Filtered/Checkm/"$file_short"/Checkm 
 done
 ```
 Run CheckM report:
