@@ -3,10 +3,26 @@ Pipeline to create a phylogeny using 46 publicly available Xf genomes from GenBa
 ## 1. Download Xf genomic sequences from GenBank.
 The FTP links to the currently 46 publicly available Xf genomes on GenBank (dated 01/2019) are saved in [xf-fna_genbank_links.txt](https://github.com/mirloupa/xf_phylogeny/blob/master/xf-fna_genbank_links.txt). Use the following bash script to download all sequences in the file to your genome directory:
 ```
-for line in $(cat xf_genbank_links.txt); do
-  wget $line ~/Xf_proj/Ncbi_46/Genomes
+for line in $(cat xf-fna_genbank_links.txt); do
+  wget $line /home/mirabl/Xf_proj/Ncbi_46/Genomes
 done
 ```
+## 2. Unzip all downloaded sequences.
+```
+gunzip GC*
+```
+or
+```
+gzip -d GC*
+```
+## 3. Change FASTA file names to their GenBank accession numbers.
+```
+for file in /home/mirabl/Xf_proj/Ncbi_46/Genomes/GCA_*.fna; do
+  mv $file /home/mirabl/Xf_proj/Ncbi_46/Genomes/$(head -1 $file | sed 's/ .*//' | sed 's/>//').fasta
+done
+```
+## 4. Download annotation files (.gbff) from GenBank.
+Repeat steps 1 and 2 for this, but instead using the [xf-gbff_genbank_links.txt](https://github.com/mirloupa/xf_phylogeny/blob/master/xf-gbff_genbank_links.txt) file, which contains FTP links to the annotation files.  
 The following Xanthomonas represenative genomes (FASTA and annotation files also obtained from GenBank) were used as outgroups:  
 *Xanthomonas campestris* pv. *campestris* str. ATCC 33913
 ```
@@ -18,22 +34,6 @@ wget ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/007/145/GCF_000007145.1_ASM7
 wget ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/019/585/GCF_000019585.2_ASM1958v2/GCF_000019585.2_ASM1958v2_genomic.fna.gz ~/Xf_proj/Ncbi_46/Genomes
 wget ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/019/585/GCF_000019585.2_ASM1958v2/GCF_000019585.2_ASM1958v2_genomic.gbff.gz ~/Xf_proj/Ncbi_46/Genomes
 ```
-## 2. Unzip all downloaded sequences.
-```
-gunzip GCA_*
-```
-or
-```
-gzip -d GCA_*
-```
-## 3. Change FASTA file names to their GenBank accession numbers.
-```
-for file in /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/GCA_*; do
-  mv /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/$file /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/$(head -1 $file | sed 's/ .*//' | sed 's/>//').fasta
-done
-```
-## 4. Download annotation files (.gbff) from GenBank.
-Repeat steps 1 and 2 for this, but instead using the [xf-gbff_genbank_links.txt](https://github.com/mirloupa/xf_phylogeny/blob/master/xf-gbff_genbank_links.txt) file, which contains FTP links to the annotation files.
 ## 5. Change the annotation file names to their GenBank accession numbers and replace the .gbff extension with .gbk.
 ```
 for file in /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/*.gbff; do
