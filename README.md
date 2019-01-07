@@ -43,41 +43,43 @@ done
 ## 6. Create a Genus database using Prokka.
 ```
 prokka-genbank_to_fasta_db /home/mirabl/Xf_proj/Ncbi_46/Genomes/*.gbk > /home/mirabl/Xf_proj/Ncbi_46/Genomes/xf.faa
-cd-hit -i /home/mirabl/Xf_proj/Ncbi_46/Genomes/xf.faa -o /home/mirabl/Ncbi_46/Genomes/xf -T 0 -M 0 -g 1 -s 0.8 -c 0.9
+cd-hit -i /home/mirabl/Xf_proj/Ncbi_46/Genomes/xf.faa -o xf -T 0 -M 0 -g 1 -s 0.8 -c 0.9
 rm -fv /home/mirabl/Xf_proj/Ncbi_46/Genomes/xf.faa /home/mirabl/Xf_proj/Ncbi_46/Genomes/xf.bak.clstr /home/mirabl/Xf_proj/Ncbi_46/Genomes/xf.clstr
 makeblastdb -dbtype prot -in /home/mirabl/Xf_proj/Ncbi_46/Genomes/xf
 mkdir /home/mirabl/Xf_proj/Ncbi_46/DB_prokka
-mv /home/mirabl/Xf_proj/Ncbi_46/Genomes/xf* /home/mirabl/Xf_proj/Ncbi_46/DB_prokka/
+mv /home/mirabl/Xf_proj/Ncbi_46/Genomes/xf.* /home/mirabl/Xf_proj/Ncbi_46/DB_prokka/
+mv /home/mirabl/Xf_proj/Ncbi_46/Genomes/xf /home/mirabl/Xf_proj/Ncbi_46/DB_prokka/
 ```
-## 7. Run Prokka and compress (gzip) files.
+## 7. Run Prokka and compress (gzip) files. Run this in a screen / tmux session.
 See https://github.com/tseemann/prokka for documentation.
 ```
-for file in /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/*.fasta; do
+for file in /home/mirabl/Xf_proj/Ncbi_46/Genomes/*.fasta; do
   file_short=$(basename $file | sed s/".fasta"//g)
-  prokka --usegenus --genus /home/mirabl/Xf_proj/Ncbi_44/DB_prokka/xf_v2 $file --outdir /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/$file_short
-  gzip /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/$file
+  prokka --usegenus --genus /home/mirabl/Xf_proj/Ncbi_46/DB_prokka/xf $file --outdir /home/mirabl/Xf_proj/Ncbi_46/Genomes/$file_short
+  gzip /home/mirabl/Xf_proj/Ncbi_46/Genomes/$file
 done
 ```
-Move all annotated directories to a new directory named 'Annotation':
+Move all annotated subdirectories to a new directory named 'Annotation':
 ```
-mv /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/*.1 /home/mirabl/Xf_proj/Ncbi_44/Annotation/
-mv /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/*.2 /home/mirabl/Xf_proj/Ncbi_44/Annotation/
+mkdir /home/mirabl/Xf_proj/Ncbi_46/Annotation/
+mv /home/mirabl/Xf_proj/Ncbi_46/Genomes/*.1 /home/mirabl/Xf_proj/Ncbi_46/Annotation/
+mv /home/mirabl/Xf_proj/Ncbi_46/Genomes/*.2 /home/mirabl/Xf_proj/Ncbi_46/Annotation/
 ```
 ## 8. Filter genomes based on Levy et al (2018) GWAS paper.
 Run quast.py on all FASTA files
 ```
-quast.py /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/*.fasta.gz
+quast.py /home/mirabl/Xf_proj/Ncbi_46/Genomes/*.fasta.gz
 ```
 Filter genomes based on N50 >=40kbp and save only unique genomes into a new file:
 ```
-python /home/hulinm/git_repos/tools/analysis/python_effector_scripts/extract_N50filtered_genomes.py /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/Quast_results/results_2018_12_10_14_08_42/transposed_report.tsv > /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/report2.txt
-cut -f1 -d " " /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/report2.txt | uniq > /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/report3.txt 
+python /home/hulinm/git_repos/tools/analysis/python_effector_scripts/extract_N50filtered_genomes.py /home/mirabl/Xf_proj/Ncbi_46/Genomes/quast_results/latest/transposed_report.tsv > /home/mirabl/Xf_proj/Ncbi_46/Genomes/report2.txt
+cut -f1 -d " " /home/mirabl/Xf_proj/Ncbi_46/Genomes/report2.txt | uniq > /home/mirabl/Xf_proj/Ncbi_46/Genomes/report3.txt 
 ```
 Save reported genomes in a new directory named 'Filtered':
 ```
-mkdir /home/mirabl/Xf_proj/Ncbi_44/Filtered
-for file in /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/$(cat report3.txt); do
-  cp /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes/"$file".fasta /home/mirabl/Xf_proj/Ncbi_44/Filtered/
+mkdir /home/mirabl/Xf_proj/Ncbi_46/Filtered
+for file in /home/mirabl/Xf_proj/Ncbi_46/Genomes/$(cat report3.txt); do
+  cp "$file".fasta.gz /home/mirabl/Xf_proj/Ncbi_46/Filtered/
 done
 ```
 ## 9. Run CheckM on filtered genomes from step 8.
