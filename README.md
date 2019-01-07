@@ -4,20 +4,20 @@ Pipeline to create a phylogeny using 46 publicly available Xf genomes from GenBa
 The FTP links to the currently 46 publicly available Xf genomes on GenBank (dated 01/2019) are saved in [xf-fna_genbank_links.txt](https://github.com/mirloupa/xf_phylogeny/blob/master/xf-fna_genbank_links.txt). Use the following bash script to download all sequences in the file to your genome directory:
 ```
 for line in $(cat xf_genbank_links.txt); do
-  wget $line /home/mirabl/Xf_proj/Ncbi_44/Xf_genomes
+  wget $line ~/Xf_proj/Ncbi_46/Genomes
 done
 ```
 The following Xanthomonas represenative genomes (FASTA and annotation files also obtained from GenBank) were used as outgroups:
 *Xanthomonas campestris* pv. *campestris* str. ATCC 33913
 ```
-wget ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/007/145/GCF_000007145.1_ASM714v1/GCF_000007145.1_ASM714v1_genomic.fna.gz
-wget ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/007/145/GCF_000007145.1_ASM714v1/GCF_000007145.1_ASM714v1_genomic.gbff.gz .
+wget ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/007/145/GCF_000007145.1_ASM714v1/GCF_000007145.1_ASM714v1_genomic.fna.gz ~/Xf_proj/Ncbi_46/Genomes
+wget ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/007/145/GCF_000007145.1_ASM714v1/GCF_000007145.1_ASM714v1_genomic.gbff.gz ~/Xf_proj/Ncbi_46/Genomes
 ```
- *Xanthomonas oryzae* pv. *oryzae* PXO99A
- ```
-wget ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/019/585/GCF_000019585.2_ASM1958v2/GCF_000019585.2_ASM1958v2_genomic.fna.gz .
-wget ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/019/585/GCF_000019585.2_ASM1958v2/GCF_000019585.2_ASM1958v2_genomic.gbff.gz .
- ```
+*Xanthomonas oryzae* pv. *oryzae* PXO99A
+```
+wget ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/019/585/GCF_000019585.2_ASM1958v2/GCF_000019585.2_ASM1958v2_genomic.fna.gz ~/Xf_proj/Ncbi_46/Genomes
+wget ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/019/585/GCF_000019585.2_ASM1958v2/GCF_000019585.2_ASM1958v2_genomic.gbff.gz ~/Xf_proj/Ncbi_46/Genomes
+```
 ## 2. Unzip all downloaded sequences.
 ```
 gunzip GCA_*
