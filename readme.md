@@ -82,7 +82,7 @@ for file in /home/mirabl/Xf_proj/Ncbi_46/Genomes/$(cat report3.txt); do
   cp "$file".fasta.gz /home/mirabl/Xf_proj/Ncbi_46/Filtered/
 done
 ```
-## 9. Run CheckM on filtered genomes from step 8.
+## 9. Run CheckM on filtered genomes from step 8. Run this in a screen / tmux session.
 This script submits the jobs to HPC. CheckM can only be run on blacklace01 or blacklace 06. 
 ```
 for file in /home/mirabl/Xf_proj/Ncbi_46/Filtered/*.fasta ; do
