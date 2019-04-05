@@ -1,10 +1,10 @@
 # *Xylella fastidiosa* (Xf) annotation and orthology search
-Pipeline to create a phylogeny using 46 publicly available Xf genomes from GenBank. https://github.com/harrisonlab/Frankia used as guideline.
+Pipeline to create a phylogeny using 55 publicly available Xf genomes from GenBank. https://github.com/harrisonlab/Frankia used as guideline.
 ## 1. Download Xf genomic sequences from GenBank.
-The FTP links to the currently 55 publicly available Xf genomes on GenBank (dated 04/2019) are saved in [201903_xf_genbank-ftp_gen-gbff.txt]. Use the following bash script to download all sequences in the file to your genome directory:
+The FTP links to the currently 55 publicly available Xf genomes on GenBank (dated 04/2019) are saved in [201903_xf_genbank-ftp_gen-fna.txt]. Use the following bash script to download all sequences in the file to your genome directory:
 ```
 for line in $(cat xf-gbff_genbank_links.txt); do
-  wget $line /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Xf/DNA_fasta
+  wget $line /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Xf/DNA_fasta/
 done
 ```
 ## 2. Unzip all downloaded sequences.
@@ -17,12 +17,12 @@ gzip -d GC*
 ```
 ## 3. Change FASTA file names to their GenBank accession numbers.
 ```
-for file in /home/mirabl/Xf_proj/Ncbi_46/Genomes/GC*.fna; do
-  mv $file /home/mirabl/Xf_proj/Ncbi_46/Genomes/$(head -1 $file | sed 's/ .*//' | sed 's/>//').fasta
+for file in /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Xf/DNA_fasta/GC*.fna; do
+  mv $file /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Xf/DNA_fasta/$(head -1 $file | sed 's/ .*//' | sed 's/>//').fasta
 done
 ```
 ## 4. Download annotation files (.gbff) from GenBank.
-Repeat steps 1 and 2 for this, but instead using the [xf-gbff_genbank_links.txt](https://github.com/mirloupa/xf_phylogeny/blob/master/xf-gbff_genbank_links.txt) file, which contains FTP links to the annotation files.  
+Repeat steps 1 and 2 for this, but instead using the [201903_xf_genbank-ftp_gen-gbff.txt] file, which contains FTP links to the annotation files.  
 The following Xanthomonas represenative genomes (FASTA and annotation files also obtained from GenBank) were used as outgroups:  
 *Xanthomonas campestris* pv. *campestris* str. ATCC 33913
 ```
