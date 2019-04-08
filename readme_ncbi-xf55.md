@@ -107,6 +107,15 @@ for file in /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Xf/Filtered/*fasta; do
   checkm qa /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Xf/Filtered/Checkm/"$file_short"/Checkm/lineage.ms /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Xf/Filtered/Checkm/"$file_short"/Checkm > Checkm/"$file_short"/Checkm/report
 done
 ```
+Append CheckM report for each genome into a single summary file "checkm_report"
+```
+cat AAAL02000032.1/Checkm/report > checkm_report
+for file in ./*; do
+  file_short=$(basename $file)
+  echo $file_short
+  cat "$file_short"/Checkm/report | tail -2 >> checkm_report
+done
+```
 ## 10. Perform orthology analysis on filtered, clean genomes using OrthoFinder.
 Rename .faa files (from PROKKA output) to contain genome name not PROKKA output:
 ```
