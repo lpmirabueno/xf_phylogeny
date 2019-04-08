@@ -1,4 +1,5 @@
 # *Xylella fastidiosa* (Xf) annotation and orthology search
+(created 01/2019)  
 Pipeline to create a phylogeny using 46 publicly available Xf genomes from GenBank. https://github.com/harrisonlab/Frankia used as guideline.
 ## 1. Download Xf genomic sequences from GenBank.
 The FTP links to the currently 46 publicly available Xf genomes on GenBank (dated 12/2018) are saved in [xf-fna_genbank_links.txt](https://github.com/mirloupa/xf_phylogeny/blob/master/xf-fna_genbank_links.txt). Use the following bash script to download all sequences in the file to your genome directory:
