@@ -169,14 +169,27 @@ cat /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/*.fasta > /h
 ```
 ## 16. Extract FASTA sequences for each orthogroup.
 ```
-cd /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08
+cd /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/
 sed s/"OG"/"orthogroup"/g Orthogroups.txt > Orthogroups2.txt
 sed s/"OG"/"orthogroup"/g SingleCopyOrthogroups.txt > SingleCopyOrthogroups2.txt
 mkdir Fasta/
 python /home/hulinm/git_repos/tools/pathogen/orthology/orthoMCL/orthoMCLgroups2fasta.py --orthogroups Orthogroups2.txt --fasta /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/proteins.fasta --out_dir Fasta/
-
+mkdir Fasta/Single_copy
 for file in $(cat SingleCopyOrthogroups2.txt); do
   echo $file
-  cp Fasta/"$file".fa Fasta/single_copy
+  cp Fasta/"$file".fa Fasta/Single_copy
+done
+```
+## 17. Align the protein sequences of each orthogroup. Submits each orthogroup to HPC.
+```
+for line in /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/Fasta/Single_copy/*.fa; do
+  file_short=$(basename $line | sed s/".fa"//g)
+  Jobs=$(qstat | grep 'clustalw2' | wc -l)
+    while [ $Jobs -gt 100 ]; do
+      sleep 10
+      printf "."
+      Jobs=$(qstat | grep 'clustalw2' | wc -l)
+    done
+  qsub /home/mirabl/SUB_PBS/Xf_proj/clustalw2.pbs $line
 done
 ```
