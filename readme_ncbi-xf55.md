@@ -193,14 +193,14 @@ for line in /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Resu
   qsub /home/mirabl/SUB_PBS/Xf_proj/clustalw2.pbs $line
 done
 ```
-## 18. Correct alignments using GBlocks
+## 18. Correct alignments using GBlocks 
 ```
 cd /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/
 rm Fasta/Single_copy/*.dnd
 rm Fasta/Single_copy/*.fa
 rm clustalw2.pbs*
 for file in Fasta/Single_copy/*.fasta; do
-  Gblocks $file -t=p -d=y   # option -t: p=protein and d=dna
+  Gblocks $file -t=p -d=y
   echo $file
 done
 ```
