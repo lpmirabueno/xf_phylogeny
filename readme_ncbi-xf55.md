@@ -163,3 +163,20 @@ Submit to HPC.
 ```
 qsub /home/mirabl/SUB_PBS/Xf_proj/orthofinder.pbs
 ```
+## 15. Concatenate all protein FASTA files (output from step 14.).
+```
+cat /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/*.fasta > /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/proteins.fasta
+```
+## 16. Extract FASTA sequences for each orthogroup.
+```
+cd /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08
+sed s/"OG"/"orthogroup"/g Orthogroups.txt > Orthogroups2.txt
+sed s/"OG"/"orthogroup"/g SingleCopyOrthogroups.txt > SingleCopyOrthogroups2.txt
+mkdir Fasta/
+python /home/hulinm/git_repos/tools/pathogen/orthology/orthoMCL/orthoMCLgroups2fasta.py --orthogroups Orthogroups2.txt --fasta /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/proteins.fasta --out_dir Fasta/
+
+for file in $(cat SingleCopyOrthogroups2.txt); do
+  echo $file
+  cp Fasta/"$file".fa Fasta/single_copy
+done
+```
