@@ -221,8 +221,109 @@ for file in $(cat SingleCopyOrthogroups2.txt); do
   perl ~/SCRIPTS/fasta2nexus.pl Fasta/Single_copy/Align/"$file" Fasta/Single_copy/Align/"$file".nex
 done
 ```
-## 21. Concatenate single copy orthogroup alignments.
+## 21. Concatenate single copy orthogroup alignments. Change the path to the input files within the perl script.
 ```
 cd /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/
-python /home/hulinm/git_repos/tools/analysis/python_effector_scripts/concatenate.py
+python /home/mirabl/SCRIPTS/concatenate.py
+```
+Use emacs to change datatype to protein.
+
+## 22. Convert from nexus to phylip format.
+```
+cd /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/
+perl /home/hulinm/git_repos/tools/analysis/python_effector_scripts/alignment_convert.pl -i combined.nex -o combined.phy.aln -f phylip -g nexus
+```
+## 23. Make partition model file.
+```
+grep charset combined.nex | sed s/charset//g | sed s/".nxs"//g | sed s/"-gb"//g | sed s/" o"/"o"/g | sed s/";"//g > positions
+```
+## 24. Order list of genes.
+```
+cut -f1 -d " " positions > list
+```
+## 25. Run the protein model tester on individual alignments.
+```
+WorkDir=/home/hulinm/frankia/analysis/orthofinder/formatted/Results_Nov14_1
+for file in $(cat $WorkDir/SingleCopyOrthogroups.txt2); do
+  echo $file
+  perl /home/hulinm/git_repos/tools/analysis/python_effector_scripts/alignment_convert.pl -i $WorkDir/fasta/single_copy/align/"$file" -o $WorkDir/fasta/single_copy/align/"$file".phy -f phylip -g fasta
+done
+```
+## 26. Test protein models for each orthogroup.
+```
+WorkDir=/home/hulinm/frankia/analysis/orthofinder/formatted/Results_Nov14_1
+for file in $WorkDir/fasta/single_copy/align/*.phy; do
+  file_short=$(basename $file | sed s/".phy"//g )
+  echo $file_short Jobs=$(qstat | grep 'sub_protte' | wc -l)
+    while [ $Jobs -gt 50 ]; do
+      sleep 10
+      printf "."
+      Jobs=$(qstat | grep 'sub_protte' | wc -l)
+    done
+  qsub /home/hulinm/git_repos/pseudomonas/sub_prottest.sh "$file" $WorkDir/fasta/single_copy/align/"$file_short"_model
+done
+```
+## 27. Get best model name into its own file.
+```
+WorkDir=/home/hulinm/frankia/analysis/orthofinder/formatted/Results_Nov14_1
+for file in $WorkDir/fasta/single_copy/align/*_model; do
+  file_short=$(basename $file | sed s/"model"//g)
+  grep "Best model according to LnL" $file | cut -d " " -f6 > $WorkDir/fasta/single_copy/align/model"$file_short"
+done
+#Edit
+#WorkDir=/home/hulinm/frankia/analysis/orthofinder/formatted/Results_Nov14_1
+#for file in $WorkDir/fasta/single_copy/align/model_*; do
+  file_short=$(basename $file | sed s/"model_"//g)
+  mv $file $WorkDir/fasta/single_copy/align/model/"$file_short"
+done
+```
+## 28. Remove model files.
+```
+rm *_model
+```
+## 29. Proteins
+```
+WorkDir=/home/hulinm/frankia/analysis/orthofinder/formatted/Results_Nov14_1 for file in $(cat $WorkDir/fasta/single_copy/align/list) ; do cat $WorkDir/fasta/single_copy/align/model/"$file" >> $WorkDir/fasta/single_copy/align/model/models done
+```
+## 30. Add sequence evolution model.
+## Make the final partition file.
+```
+WorkDir=/home/hulinm/frankia/analysis/orthofinder/formatted/Results_Nov14_1
+mkfifo pipe1
+mkfifo pipe2
+#in order to add effector names in first column
+cut -f1 $WorkDir/fasta/single_copy/align/model/models > pipe1 & 
+cut -f1,2,3 $WorkDir/fasta/single_copy/align/positions > pipe2 &
+paste pipe1 pipe2 > $WorkDir/fasta/single_copy/align/partition
+rm pipe1 pipe2
+sed s/"\t"/", "/g partition > partition_file
+```
+## 31. Run RAxML on concatenated protein alignment.
+```
+qsub /home/hulinm/git_repos/pseudomonas/orthomcl/sub_raxml_partition_aa.sh combined.phy output partition_file
+```
+## 32. Run IQTREE.
+```
+qsub /home/hulinm/git_repos/pseudomonas/orthomcl/sub_iqtree_boots.sh combined.phy2 partition_file 000421445
+```
+## 33. Blast nod genes.
+```
+for GENOME in /home/hulinm/frankia/genomes/*.fna; do
+  GENOME_FILE=$(basename $GENOME)
+  GENOME_SHORT=$(echo $GENOME_FILE | sed s/.fna//g)
+  echo $GENOME_SHORT
+  python /home/hulinm/git_repos/tools/analysis/python_effector_scripts/rename.py -i "$GENOME_SHORT".fna -o "$GENOME_SHORT".fa
+  gzip "$GENOME_SHORT".fna
+done
+
+for genome in /home/hulinm/frankia/genomes/*.fa; do
+  echo $genome
+  file=$(basename $genome)
+  genome_short=$(echo $file | sed s/.fa//g) echo $genome_short
+    for query in /home/hulinm/frankia/nod_genes/*.fa; do
+      echo $query
+      query_short=$(basename $query | sed s/.fa//g)
+      /home/hulinm/git_repos/tools/pathogen/blast/blast2csv.pl $query tblastn $genome 5 > /home/hulinm/frankia/nod_genes/blast/"$genome_short"_"$query_short"
+    done
+done
 ```
