@@ -204,3 +204,25 @@ for file in Fasta/Single_copy/*.fasta; do
   echo $file
 done
 ```
+## 19. Rename sequences to make them shorter and compatible
+```
+cd /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/
+mkdir Fasta/Single_copy/Align
+for fasta in Fasta/Single_copy/*-gb; do
+  name=$(basename $fasta | sed s/".fasta-gb"//g)
+  sed 's/peg.[0-9]//g' $fasta | sed s/GCA_//g > ./Align/"$name"
+done
+```
+## 20. Convert from fasta to nexus format.
+```
+cd /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/
+for file in $(cat SingleCopyOrthogroups2.txt); do
+  echo $file
+  perl ~/SCRIPTS/fasta2nexus.pl Fasta/Single_copy/Align/"$file" Fasta/Single_copy/Align/"$file".nex
+done
+```
+## 21. Concatenate single copy orthogroup alignments.
+```
+cd /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/
+python /home/hulinm/git_repos/tools/analysis/python_effector_scripts/concatenate.py
+```
