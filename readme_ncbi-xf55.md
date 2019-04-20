@@ -230,12 +230,12 @@ Use emacs to change datatype to protein.
 
 ## 22. Convert from nexus to phylip format.
 ```
-cd /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/
-perl /home/hulinm/git_repos/tools/analysis/python_effector_scripts/alignment_convert.pl -i combined.nex -o combined.phy.aln -f phylip -g nexus
+cd /home/mirabl/
+perl /home/hulinm/git_repos/tools/analysis/python_effector_scripts/alignment_convert.pl -i /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/Fasta/Single_copy/Align/combined.nex -o /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/Fasta/Single_copy/Align/combined.phy -f phylip -g nexus
 ```
 ## 23. Make partition model file.
 ```
-grep charset combined.nex | sed s/charset//g | sed s/".nxs"//g | sed s/"-gb"//g | sed s/" o"/"o"/g | sed s/";"//g > positions
+grep charset combined.nex | sed s/charset//g | sed s/".nex"//g | sed s/"-gb"//g | sed s/" o"/"o"/g | sed s/";"//g > positions
 ```
 ## 24. Order list of genes.
 ```
@@ -243,27 +243,27 @@ cut -f1 -d " " positions > list
 ```
 ## 25. Run the protein model tester on individual alignments.
 ```
-WorkDir=/home/hulinm/frankia/analysis/orthofinder/formatted/Results_Nov14_1
-for file in $(cat $WorkDir/SingleCopyOrthogroups.txt2); do
+cd /home/mirabl/
+for file in $(cat /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/SingleCopyOrthogroups2.txt); do
   echo $file
-  perl /home/hulinm/git_repos/tools/analysis/python_effector_scripts/alignment_convert.pl -i $WorkDir/fasta/single_copy/align/"$file" -o $WorkDir/fasta/single_copy/align/"$file".phy -f phylip -g fasta
+  perl /home/hulinm/git_repos/tools/analysis/python_effector_scripts/alignment_convert.pl -i /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/Fasta/Single_copy/Align/"$file" -o /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/Fasta/Single_copy/Align/"$file".phy -f phylip -g fasta
 done
 ```
 ## 26. Test protein models for each orthogroup.
 ```
-WorkDir=/home/hulinm/frankia/analysis/orthofinder/formatted/Results_Nov14_1
-for file in $WorkDir/fasta/single_copy/align/*.phy; do
+cd /home/mirabl/
+for file in /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/Fasta/Single_copy/Align/*.phy; do
   file_short=$(basename $file | sed s/".phy"//g )
-  echo $file_short Jobs=$(qstat | grep 'sub_protte' | wc -l)
+  echo $file_short Jobs=$(qstat | grep 'prottest' | wc -l)
     while [ $Jobs -gt 50 ]; do
       sleep 10
       printf "."
-      Jobs=$(qstat | grep 'sub_protte' | wc -l)
+      Jobs=$(qstat | grep 'prottest' | wc -l)
     done
-  qsub /home/hulinm/git_repos/pseudomonas/sub_prottest.sh "$file" $WorkDir/fasta/single_copy/align/"$file_short"_model
+  qsub /home/mirabl/SUB_PBS/Xf_proj/prottest.pbs "$file" /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/Fasta/Single_copy/Align/"$file_short"_model
 done
 ```
-## 27. Get best model name into its own file.
+## 27. Get best model name into its own file. **
 ```
 WorkDir=/home/hulinm/frankia/analysis/orthofinder/formatted/Results_Nov14_1
 for file in $WorkDir/fasta/single_copy/align/*_model; do
