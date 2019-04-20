@@ -204,26 +204,26 @@ for file in Fasta/Single_copy/*.fasta; do
   echo $file
 done
 ```
-## 19. Rename sequences to make them shorter and compatible
+## 19. Rename sequences to make them shorter and compatible (change from QTJS01000001.1|peg.00473 to genome name only, i.e. QTJS01000001.1)
 ```
-cd /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/
+cd /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/
 mkdir Fasta/Single_copy/Align
-for fasta in Fasta/Single_copy/*-gb; do
+for fasta in Fasta/Single_copy/*.fasta-gb; do
   name=$(basename $fasta | sed s/".fasta-gb"//g)
-  sed 's/peg.[0-9]//g' $fasta | sed s/GCA_//g > ./Align/"$name"
+  sed '/^>/ s/|.*//' $fasta > Fasta/Single_copy/Align/"$name"
 done
+
 ```
 ## 20. Convert from fasta to nexus format.
 ```
-cd /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/
-for file in $(cat SingleCopyOrthogroups2.txt); do
+cd ~
+for file in $(cat /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/SingleCopyOrthogroups2.txt); do
   echo $file
-  perl ~/SCRIPTS/fasta2nexus.pl Fasta/Single_copy/Align/"$file" Fasta/Single_copy/Align/"$file".nex
+  perl /home/hulinm/git_repos/tools/analysis/python_effector_scripts/alignment_convert.pl -i /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/Fasta/Single_copy/Align/"$file" -o /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/Fasta/Single_copy/Align/"$file" .nex -f nexus -g fasta
 done
 ```
 ## 21. Concatenate single copy orthogroup alignments. Change the path to the input files within the perl script.
 ```
-cd /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/
 python /home/mirabl/SCRIPTS/concatenate.py
 ```
 Use emacs to change datatype to protein.
