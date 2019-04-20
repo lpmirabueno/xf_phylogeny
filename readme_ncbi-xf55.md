@@ -254,11 +254,11 @@ done
 cd /home/mirabl/
 for file in /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/Fasta/Single_copy/Align/*.phy; do
   file_short=$(basename $file | sed s/".phy"//g )
-  echo $file_short Jobs=$(qstat | grep 'prottest' | wc -l)
+  echo $file_short Jobs=$(qstat | grep 'prottest.p' | wc -l)
     while [ $Jobs -gt 50 ]; do
       sleep 10
       printf "."
-      Jobs=$(qstat | grep 'prottest' | wc -l)
+      Jobs=$(qstat | grep 'prottest.p' | wc -l)
     done
   qsub /home/mirabl/SUB_PBS/Xf_proj/prottest.pbs "$file" /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/Fasta/Single_copy/Align/"$file_short"_model
 done
