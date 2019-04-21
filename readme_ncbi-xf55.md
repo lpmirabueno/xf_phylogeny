@@ -265,30 +265,31 @@ done
 ```
 ## 27. Get best model name into its own file. **
 ```
-WorkDir=/home/hulinm/frankia/analysis/orthofinder/formatted/Results_Nov14_1
-for file in $WorkDir/fasta/single_copy/align/*_model; do
-  file_short=$(basename $file | sed s/"model"//g)
-  grep "Best model according to LnL" $file | cut -d " " -f6 > $WorkDir/fasta/single_copy/align/model"$file_short"
-done
-#Edit
-#WorkDir=/home/hulinm/frankia/analysis/orthofinder/formatted/Results_Nov14_1
-#for file in $WorkDir/fasta/single_copy/align/model_*; do
-  file_short=$(basename $file | sed s/"model_"//g)
-  mv $file $WorkDir/fasta/single_copy/align/model/"$file_short"
+mkdir /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/Fasta/Single_copy/Align/Model/
+for file in /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/Fasta/Single_copy/Align/*_model; do
+  file_short=$(basename $file | sed s/"_model"//g)
+  grep -i "Best model according to LnL" $file | cut -d " " -f6 > /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/Fasta/Single_copy/Align/Model/"$file_short"
 done
 ```
-## 28. Remove model files.
+
+## 28. Move model files.
 ```
-rm *_model
+mkdir /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/Fasta/Single_copy/Align/Prottest_model
+for file in /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/Fasta/Single_copy/Align/*_model; do
+  file_short=$(basename $file | sed s/"_model"//g)
+  mv $file /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/Fasta/Single_copy/Align/Prottest_model/"$file_short"
+done
 ```
 ## 29. Proteins
 ```
-WorkDir=/home/hulinm/frankia/analysis/orthofinder/formatted/Results_Nov14_1 for file in $(cat $WorkDir/fasta/single_copy/align/list) ; do cat $WorkDir/fasta/single_copy/align/model/"$file" >> $WorkDir/fasta/single_copy/align/model/models done
+for file in $(cat /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/Fasta/Single_copy/Align/list); do
+  cat /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/Fasta/Single_copy/Align/Model/"$file" >> /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/Fasta/Single_copy/Align/Model/models
+done
 ```
 ## 30. Add sequence evolution model.
 ## Make the final partition file.
 ```
-WorkDir=/home/hulinm/frankia/analysis/orthofinder/formatted/Results_Nov14_1
+cd /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08
 mkfifo pipe1
 mkfifo pipe2
 #in order to add effector names in first column
