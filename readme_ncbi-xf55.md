@@ -287,17 +287,17 @@ for file in $(cat /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinde
 done
 ```
 ## 30. Add sequence evolution model.
-## Make the final partition file.
+Make the final partition file.
 ```
 cd /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08
 mkfifo pipe1
 mkfifo pipe2
-#in order to add effector names in first column
-cut -f1 $WorkDir/fasta/single_copy/align/model/models > pipe1 & 
-cut -f1,2,3 $WorkDir/fasta/single_copy/align/positions > pipe2 &
-paste pipe1 pipe2 > $WorkDir/fasta/single_copy/align/partition
-rm pipe1 pipe2
-sed s/"\t"/", "/g partition > partition_file
+#Add effector names in first column
+cut -f1 Fasta/Single_copy/Align/Model/models > pipe1 & 
+cut -f1,2,3 Fasta/Single_copy/Align/positions > pipe2 &
+paste pipe1 pipe2 > Fasta/Single_copy/Align/partition
+mv pipe* /data2/scratch2/mirabl/Discard
+sed s/"\t"/", "/g Fasta/Single_copy/Align/partition > Fasta/Single_copy/Align/partition_file
 ```
 ## 31. Run RAxML on concatenated protein alignment.
 ```
@@ -305,7 +305,7 @@ qsub /home/hulinm/git_repos/pseudomonas/orthomcl/sub_raxml_partition_aa.sh combi
 ```
 ## 32. Run IQTREE.
 ```
-qsub /home/hulinm/git_repos/pseudomonas/orthomcl/sub_iqtree_boots.sh combined.phy2 partition_file 000421445
+qsub /home/mirabl/SUB_PBS/Xf_proj/iqtree.pbs /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/Fasta/Single_copy/Align/combined.phy /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/Fasta/Single_copy/Align/partition_file
 ```
 ## 33. Blast nod genes.
 ```
