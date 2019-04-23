@@ -5,7 +5,7 @@ Pipeline to create a phylogeny using 55 publicly available Xf genomes from GenBa
 The FTP links to the currently 55 publicly available Xf genomes on GenBank (dated 04/2019) are saved in [201903_xf_genbank-ftp_gen-fna.txt]. Use the following bash script to download all sequences in the file to your genome directory:
 ```
 for line in $(cat xf-gbff_genbank_links.txt); do
-  wget $line /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Xf/DNA_fasta/
+  wget $line /data2/scratch2/mirabl/Xf_proj/Genomes/Xf/DNA_fasta
 done
 ```
 ## 2. Unzip all downloaded sequences.
@@ -18,8 +18,11 @@ gzip -d GC*
 ```
 ## 3. Change FASTA file names to their GenBank accession numbers.
 ```
-for file in /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Xf/DNA_fasta/GC*.fna; do
-  mv $file /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Xf/DNA_fasta/$(head -1 $file | sed 's/ .*//' | sed 's/>//').fasta
+for file in /data2/scratch2/mirabl/Xf_proj/Genomes/Xf/DNA_fasta/GC*.fna; do
+  mv $file /data2/scratch2/mirabl/Xf_proj/Genomes/Xf/DNA_fasta/$(head -1 $file | sed 's/ .*//' | sed 's/>//').fasta
+done
+for file in ./*.fna; do
+  mv $file ./$(head -1 $file | sed 's/ .*//' | sed 's/>//').fasta
 done
 ```
 ## 4. Download annotation files (.gbff) from GenBank.
@@ -37,19 +40,21 @@ wget ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/019/585/GCF_000019585.2_ASM1
 ```
 ## 5. Change the annotation file names to their GenBank accession numbers and replace the .gbff extension with .gbk.
 ```
-for file in /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Xf/DNA_gbff/*.gbff; do
-  mv $file /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Xf/DNA_gbff/$(head -1 $file | tr -s ' ' | cut -d " " -f2).gbk
+for file in /data2/scratch2/mirabl/Xf_proj/Genomes/Xf/DNA_gbff/*.gbff; do
+  mv $file /data2/scratch2/mirabl/Xf_proj/Genomes/Xf/DNA_gbff/$(head -1 $file | tr -s ' ' | cut -d " " -f2).gbk
 done
+
 ```
 ## 6. Create a Genus database using Prokka.
 ```
-prokka-genbank_to_fasta_db /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Xf/DNA_gbff/*.gbk > /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Xf/xf.faa
-cd-hit -i /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Xf/xf.faa -o xf -T 0 -M 0 -g 1 -s 0.8 -c 0.9
-rm -fv /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Xf/xf.faa /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Xf/xf.bak.clstr /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Xf/xf.clstr
-makeblastdb -dbtype prot -in /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Xf/xf
-mkdir /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Xf/DB_prokka
-mv /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Xf/DB_prokka/
-mv /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Xf/DB_prokka/
+cd /home/mirabl/
+prokka-genbank_to_fasta_db /data2/scratch2/mirabl/Xf_proj/Genomes/All/DNA_gbff/*.gbk > /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/xf.faa
+cd-hit -i /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/xf.faa -o xf -T 0 -M 0 -g 1 -s 0.8 -c 0.9
+rm -fv /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/xf.faa /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/xf.bak.clstr /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Xf/xf.clstr
+makeblastdb -dbtype prot -in /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/xf
+mkdir /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/DB_prokka
+mv /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/DB_prokka/
+mv /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/DB_prokka/
 ```
 ## 7. Run Prokka and compress (gzip) files. Run this in a screen / tmux session.
 See https://github.com/tseemann/prokka for documentation.
