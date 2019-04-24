@@ -50,62 +50,69 @@ done
 cd /home/mirabl/
 prokka-genbank_to_fasta_db /data2/scratch2/mirabl/Xf_proj/Genomes/All/DNA_gbff/*.gbk > /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/xf.faa
 cd-hit -i /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/xf.faa -o xf -T 0 -M 0 -g 1 -s 0.8 -c 0.9
-rm -fv /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/xf.faa /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/xf.bak.clstr /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Xf/xf.clstr
+mv xf* /data2/scratch2/mirabl/Xf_proj/
+rm -fv /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/xf.faa /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/xf.bak.clstr /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/xf.clstr
 makeblastdb -dbtype prot -in /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/xf
 mkdir /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/DB_prokka
-mv /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/DB_prokka/
-mv /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/DB_prokka/
+mv /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/xf.* /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/DB_prokka/
 ```
 ## 7. Run Prokka and compress (gzip) files. Run this in a screen / tmux session.
 See https://github.com/tseemann/prokka for documentation.
 ```
-for file in /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Xf/DNA_fasta/*.fasta; do
+cd /home/mirabl/
+for file in /data2/scratch2/mirabl/Xf_proj/Genomes/All/DNA_fasta/*.fasta; do
   file_short=$(basename $file | sed s/".fasta"//g)
-  prokka --usegenus --genus //home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Xf/DB_prokka/xf $file --outdir /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Xf/DNA_fasta/$file_short
-  gzip /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Xf/DNA_fasta/$file
+  prokka --usegenus --genus /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/xf $file --outdir /data2/scratch2/mirabl/Xf_proj/Genomes/All/DNA_fasta/$file_short
+  gzip -f /data2/scratch2/mirabl/Xf_proj/Genomes/All/DNA_fasta/$file
 done
 ```
 Move all annotated subdirectories to a new directory named 'Annotation':
 ```
-mkdir /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Xf/Annotation/
-mv /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Xf/Annotation/
-mv /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Xf/Annotation/
+mkdir /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/Annotation/
+mv /data2/scratch2/mirabl/Xf_proj/Genomes/All/DNA_fasta/*.1 /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/Annotation/
+mv /data2/scratch2/mirabl/Xf_proj/Genomes/All/DNA_fasta/*.2 /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/Annotation/
 ```
 ## 8. Filter genomes based on Levy et al (2018) GWAS paper.
 Run quast.py on all FASTA files
 ```
-quast.py /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Xf/DNA_fasta/*.fasta.gz
+cd /home/mirabl/
+quast.py /data2/scratch2/mirabl/Xf_proj/Genomes/All/DNA_fasta/*.fasta.gz
+mv /home/mirabl/quast_results /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/
 ```
 Filter genomes based on N50 >=40kbp and save only unique genomes into a new file:
 ```
-python /home/hulinm/git_repos/tools/analysis/python_effector_scripts/extract_N50filtered_genomes.py /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Xf/DNA_fasta/quast_results/latest/transposed_report.tsv > /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Xf/report2.txt
-cut -f1 -d " " /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Xf/report2.txt | uniq > /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Xf/report3.txt 
+cd /home/mirabl/
+python /home/hulinm/git_repos/tools/analysis/python_effector_scripts/extract_N50filtered_genomes.py /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/quast_results/results_2019_04_24_08_52_22/transposed_report.tsv > /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/report2.txt
+cut -f1 -d " " /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/report2.txt | uniq > /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/report3.txt 
 ```
 Save reported genomes in a new directory named 'Filtered':
 ```
-mkdir /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Xf/Filtered
-for file in /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Xf/$(cat report3.txt); do
-  cp "$file".fasta.gz /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Xf/Filtered/
+mkdir /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/Filtered
+cd /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/
+for file in $(cat report3.txt); do
+  cp /data2/scratch2/mirabl/Xf_proj/Genomes/All/DNA_fasta/"$file".fasta.gz Filtered/
 done
 ```
 ## 9. Run CheckM on filtered genomes from step 8. Run this in a screen / tmux session.
 This script submits the jobs to HPC. CheckM can only be run on blacklace01 or blacklace 06. 
 ```
-for file in /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Xf/Filtered/*.fasta ; do
+gunzip /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/Filtered/*.fasta.gz
+mkdir /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/Filtered/Checkm
+for file in /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/Filtered/*.fasta ; do
   file_short=$(basename $file | sed s/".fasta"//g) 
   echo $file_short 
-  #mkdir -p /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Xf/Filtered/Checkm/"$file_short"/Checkm 
-  #cp $file /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Xf/Filtered/Checkm/"$file_short" 
+  mkdir -p /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/Filtered/Checkm/"$file_short"/Checkm 
+  cp $file /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/Filtered/Checkm/"$file_short" 
   Jobs=$(qstat | grep -i 'checkm' | wc -l) 
     while [ $Jobs -gt 5 ]; do 
       sleep 10
       printf "." 
       Jobs=$(qstat | grep -i 'checkm' | wc -l) 
     done
-  qsub /home/mirabl/SUB_PBS/Xf_proj/checkm.pbs /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Xf/Filtered/Checkm/"$file_short" /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Xf/Filtered/Checkm/"$file_short"/Checkm 
+  qsub /home/mirabl/SUB_PBS/Xf_proj/checkm.pbs /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/Filtered/Checkm/"$file_short" /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/Filtered/Checkm/"$file_short"/Checkm 
 done
 ```
-Run CheckM report:
+Run CheckM report:**
 ```
 for file in /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Xf/Filtered/*fasta; do
   file_short=$(basename $file | sed s/".fasta"//g)
