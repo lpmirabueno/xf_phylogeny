@@ -112,11 +112,12 @@ for file in /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/Filtered/*
   qsub /home/mirabl/SUB_PBS/Xf_proj/checkm.pbs /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/Filtered/Checkm/"$file_short" /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/Filtered/Checkm/"$file_short"/Checkm 
 done
 ```
-Run CheckM report:**
+Run CheckM report:
 ```
-for file in /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Xf/Filtered/*fasta; do
+cd /home/mirabl
+for file in /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/Filtered/*fasta; do
   file_short=$(basename $file | sed s/".fasta"//g)
-  checkm qa /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Xf/Filtered/Checkm/"$file_short"/Checkm/lineage.ms /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Xf/Filtered/Checkm/"$file_short"/Checkm > Checkm/"$file_short"/Checkm/report
+  checkm qa /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/Filtered/Checkm/"$file_short"/Checkm/lineage.ms /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/Filtered/Checkm/"$file_short"/Checkm > /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/Filtered/Checkm/"$file_short"/Checkm/report
 done
 ```
 Append CheckM report for each genome into a single summary file "checkm_report"
@@ -131,53 +132,52 @@ done
 ## 10. Perform orthology analysis on filtered, clean genomes using OrthoFinder.
 Rename .faa files (from PROKKA output) to contain genome name not PROKKA output:
 ```
-for file in /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Xf/DNA_fasta/*.fasta.gz; do
+for file in /data2/scratch2/mirabl/Xf_proj/Genomes/All/DNA_fasta/*.fasta.gz; do
   file_short=$(basename $file | sed s/".fasta.gz"//g)
   echo $file_short
-  cp /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Xf/Annotation/"$file_short"/*.faa /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Xf/Annotation/"$file_short"/"$file_short".faa
+  cp /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/Annotation/"$file_short"/*.faa /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/Annotation/"$file_short"/"$file_short".faa
 done
 ```
 ## 11. Copy all .faa files to a new directory named 'Analysis'.
 ```
-mkdir /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Analysis
-cp /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Xf/Annotation/*/*.faa /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Analysis
+mkdir /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/Analysis
+cp /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/Annotation/*/*.faa /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/Analysis
 ```
 ## 12. Modify all fasta files to remove description, which is the correct format for OrthoMCL.
 Each fasta item must be in format of strain|peg.number
 ```
-for file in /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Analysis/*.faa; do
+for file in /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/Analysis/*.faa; do
   file_short=$(basename $file | sed s/".faa"//g)
   echo $file_short
-  sed 's/ .*//' $file | sed s/"_"/"|peg."/g > /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Analysis/"$file_short".fa
+  sed 's/ .*//' $file | sed s/"_"/"|peg."/g > /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/Analysis/"$file_short".fa
 done
 ```
 ```
-for file in /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Analysis/*.fa; do
+for file in /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/Analysis/*.fa; do
   id=$(less $file | grep ">" | cut -f1 -d "|" | sed s/">"//g | uniq)
   file_short=$(basename $file | sed s/".fa"//g)
   echo $id
   echo $file_short
-  sed s/"$id"/"$file_short"/g $file > /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Analysis/$file_short.fasta
+  sed s/"$id"/"$file_short"/g $file > /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/Analysis/$file_short.fasta
 done
 ```
 ## 13. Remove manually those that did not pass CheckM and also those that did not pass N50 limit and move to new directory OrthoFinder/Formatted
 ```
-mkdir /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/
-mkdir /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted
-for file in /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Xf/Filtered/*.fasta; do
+mkdir /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/ /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Formatted
+for file in /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/Filtered/*.fasta; do
   file_short=$(basename $file | sed s/".fasta"//g | cut -f1,2 -d _ )
   echo $file_short
-  mv /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/Analysis/$file_short.fasta /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/$file_short.fasta
+  mv /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/Analysis/$file_short.fasta /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Formatted/$file_short.fasta
 done
 ```
 ## 14. Run OrthoFinder.
-Submit to HPC.
+Submit to HPC (change input directory within PBS script).
 ```
 qsub /home/mirabl/SUB_PBS/Xf_proj/orthofinder.pbs
 ```
-## 15. Concatenate all protein FASTA files (output from step 14.).
+## 15. Concatenate all protein FASTA files (output from step 14.). **
 ```
-cat /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/*.fasta > /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/proteins.fasta
+cat /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Formatted/*.fasta > /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Formatted/proteins.fasta
 ```
 ## 16. Extract FASTA sequences for each orthogroup.
 ```
