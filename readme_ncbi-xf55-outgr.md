@@ -181,7 +181,7 @@ cat /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Format
 ```
 ## 16. Extract FASTA sequences for each orthogroup.
 ```
-cd /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/
+cd /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Formatted/Results_Apr08/
 sed s/"OG"/"orthogroup"/g Orthogroups.txt > Orthogroups2.txt
 sed s/"OG"/"orthogroup"/g SingleCopyOrthogroups.txt > SingleCopyOrthogroups2.txt
 mkdir Fasta/
