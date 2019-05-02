@@ -170,12 +170,12 @@ for file in /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/Filtered/*
   mv /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/Analysis/$file_short.fasta /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Formatted/$file_short.fasta
 done
 ```
-## 14. Run OrthoFinder.
+## 14. Run OrthoFinder. **
 Submit to HPC (change input directory within PBS script).
 ```
 qsub /home/mirabl/SUB_PBS/Xf_proj/orthofinder.pbs
 ```
-## 15. Concatenate all protein FASTA files (output from step 14.). **
+## 15. Concatenate all protein FASTA files (output from step 14.).
 ```
 cat /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Formatted/*.fasta > /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Formatted/proteins.fasta
 ```
@@ -275,7 +275,7 @@ for file in /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Form
   qsub /home/mirabl/SUB_PBS/Xf_proj/prottest.pbs "$file" /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/Fasta/Single_copy/Align/"$file_short"_model
 done
 ```
-## 27. Get best model name into its own file. **
+## 27. Get best model name into its own file.
 ```
 mkdir /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/Fasta/Single_copy/Align/Model/
 for file in /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/Fasta/Single_copy/Align/*_model; do
