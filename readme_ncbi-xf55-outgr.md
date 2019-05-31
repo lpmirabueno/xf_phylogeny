@@ -179,22 +179,22 @@ qsub /home/mirabl/SUB_PBS/Xf_proj/orthofinder.pbs
 ```
 cat /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Formatted/*.fasta > /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Formatted/proteins.fasta
 ```
-## 16. Extract FASTA sequences for each orthogroup.
+## 16. Extract FASTA sequences for each orthogroup. **
 ```
-cd /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Formatted/Results_Apr08/
+cd /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Formatted/OrthoFinder/Results_May31/Orthogroups/
 sed s/"OG"/"orthogroup"/g Orthogroups.txt > Orthogroups2.txt
-sed s/"OG"/"orthogroup"/g SingleCopyOrthogroups.txt > SingleCopyOrthogroups2.txt
+sed s/"OG"/"orthogroup"/g Orthogroups_SingleCopyOrthologues.txt > Orthogroups_SingleCopyOrthologues2.txt
 mkdir Fasta/
-python /home/hulinm/git_repos/tools/pathogen/orthology/orthoMCL/orthoMCLgroups2fasta.py --orthogroups Orthogroups2.txt --fasta /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/proteins.fasta --out_dir Fasta/
+python /home/hulinm/git_repos/tools/pathogen/orthology/orthoMCL/orthoMCLgroups2fasta.py --orthogroups Orthogroups2.txt --fasta /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Formatted/proteins.fasta --out_dir Fasta/
 mkdir Fasta/Single_copy
-for file in $(cat SingleCopyOrthogroups2.txt); do
+for file in $(cat Orthogroups_SingleCopyOrthologues2.txt); do
   echo $file
   cp Fasta/"$file".fa Fasta/Single_copy
 done
 ```
 ## 17. Align the protein sequences of each orthogroup. Submits each orthogroup to HPC.
 ```
-for line in /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/Fasta/Single_copy/*.fa; do
+for line in /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Formatted/OrthoFinder/Results_May31/Orthogroups/Fasta/Single_copy/*.fa; do
   file_short=$(basename $line | sed s/".fa"//g)
   Jobs=$(qstat | grep 'clustalw2' | wc -l)
     while [ $Jobs -gt 100 ]; do
@@ -207,7 +207,7 @@ done
 ```
 ## 18. Correct alignments using GBlocks 
 ```
-cd /home/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/
+cd /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Formatted/OrthoFinder/Results_May31/Orthogroups/
 rm Fasta/Single_copy/*.dnd
 rm Fasta/Single_copy/*.fa
 rm clustalw2.pbs*
@@ -218,7 +218,7 @@ done
 ```
 ## 19. Rename sequences to make them shorter and compatible (change from QTJS01000001.1|peg.00473 to genome name only, i.e. QTJS01000001.1)
 ```
-cd /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/
+cd /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Formatted/OrthoFinder/Results_May31/Orthogroups/
 mkdir Fasta/Single_copy/Align
 for fasta in Fasta/Single_copy/*.fasta-gb; do
   name=$(basename $fasta | sed s/".fasta-gb"//g)
