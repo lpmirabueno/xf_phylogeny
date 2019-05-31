@@ -179,7 +179,7 @@ qsub /home/mirabl/SUB_PBS/Xf_proj/orthofinder.pbs
 ```
 cat /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Formatted/*.fasta > /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Formatted/proteins.fasta
 ```
-## 16. Extract FASTA sequences for each orthogroup. **
+## 16. Extract FASTA sequences for each orthogroup.
 ```
 cd /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Formatted/OrthoFinder/Results_May31/Orthogroups/
 sed s/"OG"/"orthogroup"/g Orthogroups.txt > Orthogroups2.txt
@@ -205,7 +205,7 @@ for line in /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinde
   qsub /home/mirabl/SUB_PBS/Xf_proj/clustalw2.pbs $line
 done
 ```
-## 18. Correct alignments using GBlocks 
+## 18. Correct alignments using GBlocks **
 ```
 cd /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Formatted/OrthoFinder/Results_May31/Orthogroups/
 rm Fasta/Single_copy/*.dnd
