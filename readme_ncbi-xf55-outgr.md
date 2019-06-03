@@ -262,10 +262,10 @@ for file in $(cat /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/Orth
   perl /home/hulinm/git_repos/tools/analysis/python_effector_scripts/alignment_convert.pl -i /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Formatted/OrthoFinder/Results_May31/Orthogroups/Fasta/Single_copy/Align/"$file" -o /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Formatted/OrthoFinder/Results_May31/Orthogroups/Fasta/Single_copy/Align/"$file".phy -f phylip -g fasta
 done
 ```
-## 26. Test protein models for each orthogroup. **
+## 26. Test protein models for each orthogroup.
 ```
 cd /home/mirabl/
-for file in /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/Fasta/Single_copy/Align/*.phy; do
+for file in /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Formatted/OrthoFinder/Results_May31/Orthogroups/Fasta/Single_copy/Align/*.phy; do
   file_short=$(basename $file | sed s/".phy"//g )
   echo $file_short Jobs=$(qstat | grep 'prottest.p' | wc -l)
     while [ $Jobs -gt 50 ]; do
@@ -273,10 +273,10 @@ for file in /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Form
       printf "."
       Jobs=$(qstat | grep 'prottest.p' | wc -l)
     done
-  qsub /home/mirabl/SUB_PBS/Xf_proj/prottest.pbs "$file" /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/Fasta/Single_copy/Align/"$file_short"_model
+  qsub /home/mirabl/SUB_PBS/Xf_proj/prottest.pbs "$file" /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Formatted/OrthoFinder/Results_May31/Orthogroups/Fasta/Single_copy/Align/"$file_short"_model
 done
 ```
-## 27. Get best model name into its own file.
+## 27. Get best model name into its own file. **
 ```
 mkdir /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/Fasta/Single_copy/Align/Model/
 for file in /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/Fasta/Single_copy/Align/*_model; do
