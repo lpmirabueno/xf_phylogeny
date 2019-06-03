@@ -205,13 +205,14 @@ for line in /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinde
   qsub /home/mirabl/SUB_PBS/Xf_proj/clustalw2.pbs $line
 done
 ```
-## 18. Correct alignments using GBlocks **
+## 18. Correct alignments using GBlocks
 ```
 cd /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Formatted/OrthoFinder/Results_May31/Orthogroups/
 rm Fasta/Single_copy/*.dnd
 rm Fasta/Single_copy/*.fa
-rm clustalw2.pbs*
-for file in Fasta/Single_copy/*.fasta; do
+rm clustalw2.pbs.*
+cd ~
+for file in /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Formatted/OrthoFinder/Results_May31/Orthogroups/Fasta/Single_copy*.fasta; do
   Gblocks $file -t=p -d=y
   echo $file
 done
@@ -229,9 +230,9 @@ done
 ## 20. Convert from fasta to nexus format.
 ```
 cd ~
-for file in $(cat /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/SingleCopyOrthogroups2.txt); do
+for file in $(cat /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Formatted/OrthoFinder/Results_May31/Orthogroups/Orthogroups_SingleCopyOrthologues2.txt); do
   echo $file
-  perl /home/hulinm/git_repos/tools/analysis/python_effector_scripts/alignment_convert.pl -i /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/Fasta/Single_copy/Align/"$file" -o /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/Fasta/Single_copy/Align/"$file" .nex -f nexus -g fasta
+  perl /home/hulinm/git_repos/tools/analysis/python_effector_scripts/alignment_convert.pl -i /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Formatted/OrthoFinder/Results_May31/Orthogroups/Fasta/Single_copy/Align/"$file" -o /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Formatted/OrthoFinder/Results_May31/Orthogroups/Fasta/Single_copy/Align/"$file".nex -f nexus -g fasta
 done
 ```
 ## 21. Concatenate single copy orthogroup alignments. Change the path to the input files within the perl script.
@@ -243,7 +244,7 @@ Use emacs to change datatype to protein.
 ## 22. Convert from nexus to phylip format.
 ```
 cd /home/mirabl/
-perl /home/hulinm/git_repos/tools/analysis/python_effector_scripts/alignment_convert.pl -i /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/Fasta/Single_copy/Align/combined.nex -o /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/Fasta/Single_copy/Align/combined.phy -f phylip -g nexus
+perl /home/hulinm/git_repos/tools/analysis/python_effector_scripts/alignment_convert.pl -i /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Formatted/OrthoFinder/Results_May31/Orthogroups/Fasta/Single_copy/Align/combined.nex -o /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Formatted/OrthoFinder/Results_May31/Orthogroups/Fasta/Single_copy/Align/combined.phy -f phylip -g nexus
 ```
 ## 23. Make partition model file.
 ```
@@ -256,12 +257,12 @@ cut -f1 -d " " positions > list
 ## 25. Run the protein model tester on individual alignments.
 ```
 cd /home/mirabl/
-for file in $(cat /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/SingleCopyOrthogroups2.txt); do
+for file in $(cat /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Formatted/OrthoFinder/Results_May31/Orthogroups/Orthogroups_SingleCopyOrthologues2.txt); do
   echo $file
-  perl /home/hulinm/git_repos/tools/analysis/python_effector_scripts/alignment_convert.pl -i /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/Fasta/Single_copy/Align/"$file" -o /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/Fasta/Single_copy/Align/"$file".phy -f phylip -g fasta
+  perl /home/hulinm/git_repos/tools/analysis/python_effector_scripts/alignment_convert.pl -i /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Formatted/OrthoFinder/Results_May31/Orthogroups/Fasta/Single_copy/Align/"$file" -o /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Formatted/OrthoFinder/Results_May31/Orthogroups/Fasta/Single_copy/Align/"$file".phy -f phylip -g fasta
 done
 ```
-## 26. Test protein models for each orthogroup.
+## 26. Test protein models for each orthogroup. **
 ```
 cd /home/mirabl/
 for file in /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/Fasta/Single_copy/Align/*.phy; do
