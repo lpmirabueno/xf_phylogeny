@@ -278,45 +278,43 @@ done
 ```
 ## 27. Get best model name into its own file.
 ```
-mkdir /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/Fasta/Single_copy/Align/Model/
-for file in /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/Fasta/Single_copy/Align/*_model; do
+mkdir /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Formatted/OrthoFinder/Results_May31/Orthogroups/Fasta/Single_copy/Align/Model/
+for file in /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Formatted/OrthoFinder/Results_May31/Orthogroups/Fasta/Single_copy/Align/*_model; do
   file_short=$(basename $file | sed s/"_model"//g)
-  grep -i "Best model according to LnL" $file | cut -d " " -f6 > /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/Fasta/Single_copy/Align/Model/"$file_short"
+  grep -i "Best model according to LnL" $file | cut -d " " -f6 > /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Formatted/OrthoFinder/Results_May31/Orthogroups/Fasta/Single_copy/Align/Model/"$file_short"
 done
 ```
 
 ## 28. Move model files.
 ```
-mkdir /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/Fasta/Single_copy/Align/Prottest_model
-for file in /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/Fasta/Single_copy/Align/*_model; do
+mkdir /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Formatted/OrthoFinder/Results_May31/Orthogroups/Fasta/Single_copy/Align/Prottest_model
+for file in /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Formatted/OrthoFinder/Results_May31/Orthogroups/Fasta/Single_copy/Align/*_model; do
   file_short=$(basename $file | sed s/"_model"//g)
-  mv $file /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/Fasta/Single_copy/Align/Prottest_model/"$file_short"
+  mv $file /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Formatted/OrthoFinder/Results_May31/Orthogroups/Fasta/Single_copy/Align/Prottest_model/"$file_short"
 done
 ```
 ## 29. Proteins
 ```
-for file in $(cat /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/Fasta/Single_copy/Align/list); do
-  cat /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/Fasta/Single_copy/Align/Model/"$file" >> /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/Fasta/Single_copy/Align/Model/models
+for file in $(cat/data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Formatted/OrthoFinder/Results_May31/Orthogroups/Fasta/Single_copy/Align/list); do
+  cat /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Formatted/OrthoFinder/Results_May31/Orthogroups/Fasta/Single_copy/Align/Model/"$file" >> /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Formatted/OrthoFinder/Results_May31/Orthogroups/Fasta/Single_copy/Align/Model/models
 done
 ```
-## 30. Add sequence evolution model. **
+## 30. Add sequence evolution model.
 Make the final partition file.
 ```
-cd /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08
+cd /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Formatted/OrthoFinder/Results_May31/Orthogroups/
 mkfifo pipe1
 mkfifo pipe2
 #Add effector names in first column
-cut -f1 Fasta/Single_copy/Align/Model/models > pipe1 & 
-cut -f1,2,3 Fasta/Single_copy/Align/positions > pipe2 &
-paste pipe1 pipe2 > Fasta/Single_copy/Align/partition
+cut -f1 Fasta/Single_copy/Align/Model/models > pipe1 & cut -f1,2,3 Fasta/Single_copy/Align/positions > pipe2 & paste pipe1 pipe2 > Fasta/Single_copy/Align/partition
 mv pipe* /data2/scratch2/mirabl/Discard
 sed s/"\t"/", "/g Fasta/Single_copy/Align/partition > Fasta/Single_copy/Align/partition_file
 ```
 ## 31. Run RAxML on concatenated protein alignment.
 ```
-qsub /home/hulinm/git_repos/pseudomonas/orthomcl/sub_raxml_partition_aa.sh combined.phy output partition_file
+qsub ~/SUB_PBS/Xf_proj/raxml_partition.pbs /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Formatted/OrthoFinder/Results_May31/Orthogroups/Fasta/Single_copy/Align/combined.phy raxml_cat_aa-aln.out /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Formatted/OrthoFinder/Results_May31/Orthogroups/Fasta/Single_copy/Align/partition_file
 ```
-## 32. Run IQTREE.
+## 32. Run IQTREE. **
 ```
 qsub /home/mirabl/SUB_PBS/Xf_proj/iqtree.pbs /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/Fasta/Single_copy/Align/combined.phy /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/Fasta/Single_copy/Align/partition_file
 ```
