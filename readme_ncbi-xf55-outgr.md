@@ -306,7 +306,7 @@ cd /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Formatt
 mkfifo pipe1
 mkfifo pipe2
 #Add effector names in first column
-cut -f1 Fasta/Single_copy/Align/Model/ > pipe1 & cut -f1,2,3 Fasta/Single_copy/Align/positions > pipe2 & paste pipe1 pipe2 > Fasta/Single_copy/Align/partition
+cut -f1 Fasta/Single_copy/Align/Model/models > pipe1 & cut -f1,2,3 Fasta/Single_copy/Align/positions > pipe2 & paste pipe1 pipe2 > Fasta/Single_copy/Align/partition
 mv pipe* /data2/scratch2/mirabl/Discard
 sed s/"\t"/", "/g Fasta/Single_copy/Align/partition > Fasta/Single_copy/Align/partition_file
 ```
