@@ -306,17 +306,18 @@ cd /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Formatt
 mkfifo pipe1
 mkfifo pipe2
 #Add effector names in first column
-cut -f1 Fasta/Single_copy/Align/Model/models > pipe1 & cut -f1,2,3 Fasta/Single_copy/Align/positions > pipe2 & paste pipe1 pipe2 > Fasta/Single_copy/Align/partition
+cut -f1 Fasta/Single_copy/Align/Model/ > pipe1 & cut -f1,2,3 Fasta/Single_copy/Align/positions > pipe2 & paste pipe1 pipe2 > Fasta/Single_copy/Align/partition
 mv pipe* /data2/scratch2/mirabl/Discard
 sed s/"\t"/", "/g Fasta/Single_copy/Align/partition > Fasta/Single_copy/Align/partition_file
 ```
 ## 31. Run RAxML on concatenated protein alignment.
 ```
+cd /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Formatted/OrthoFinder/Results_May31/Orthogroups/Fasta/Single_copy/Align/Model
 qsub ~/SUB_PBS/Xf_proj/raxml_partition.pbs /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Formatted/OrthoFinder/Results_May31/Orthogroups/Fasta/Single_copy/Align/combined.phy raxml_cat_aa-aln.out /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Formatted/OrthoFinder/Results_May31/Orthogroups/Fasta/Single_copy/Align/partition_file
 ```
 ## 32. Run IQTREE. **
 ```
-qsub /home/mirabl/SUB_PBS/Xf_proj/iqtree.pbs /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/Fasta/Single_copy/Align/combined.phy /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Genome_seq/OrthoFinder/Formatted/Results_Apr08/Fasta/Single_copy/Align/partition_file
+qsub /home/mirabl/SUB_PBS/Xf_proj/iqtree.pbs /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Formatted/OrthoFinder/Results_May31/Orthogroups/Fasta/Single_copy/Align/combined.phy /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_w_outgr/OrthoFinder/Formatted/OrthoFinder/Results_May31/Orthogroups/Fasta/Single_copy/Align/partition_file
 ```
 ## 33. Blast nod genes.
 ```
