@@ -168,7 +168,7 @@ cp /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_final/Annotation/*/*.faa /d
 ```
 
 ### 12. Modify all fasta files to remove description, which is the correct format for OrthoMCL.
-Each fasta item must be in format of strain|peg.number
+Each fasta header must be in format of strain|peg.number
 ```
 for file in /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_final/Analysis/*.faa; do
   file_short=$(basename $file | sed s/".faa"//g)
@@ -203,7 +203,7 @@ Submit to HPC (change input directory within PBS script).
 qsub /home/mirabl/SUB_PBS/Xf_proj/orthofinder.pbs
 ```
 
-### 15. Concatenate all protein FASTA files (output from step 14.).
+### 15. Concatenate all protein FASTA files (input from step 14.).
 ```
 cat /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_final/OrthoFinder/Formatted/*.fasta > /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_final/OrthoFinder/Formatted/proteins.fasta
 ```
