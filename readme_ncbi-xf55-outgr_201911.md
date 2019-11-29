@@ -135,7 +135,7 @@ for file in /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_201911/Filtered/*.
     done
   qsub /home/mirabl/SUB_PBS/Xf_proj/checkm.pbs /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_201911/Filtered/Checkm/"$file_short" /data2/scratch2/mirabl/Xf_proj/NCBI_Xf55/Analysis_201911/Filtered/Checkm/"$file_short"/Checkm
 done
-```
+``` 
 
 Run CheckM report: *****
 ```
