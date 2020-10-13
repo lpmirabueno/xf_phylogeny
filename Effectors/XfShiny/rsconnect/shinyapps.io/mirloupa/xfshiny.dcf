@@ -1,0 +1,14 @@
+name: xfshiny
+title: XfShiny
+username:
+account: mirloupa
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 3004949
+bundleId: 3735454
+url: https://mirloupa.shinyapps.io/xfshiny/
+when: 1602604970.74014
+lastSyncTime: 1602604970.74015
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: effector_sum.rmd|README.md

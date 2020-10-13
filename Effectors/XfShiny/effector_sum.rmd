@@ -1,7 +1,10 @@
 # Set up
 ```{r}
+knitr::opts_chunk$set(echo = TRUE)
 install.packages("shiny")
 library(shiny)
+library(rsconnect)
+setwd("~/GDrive_lpmir/PhD/Git_repos/Xf/Effectors/XfShiny")
 ```
 
 # Code
