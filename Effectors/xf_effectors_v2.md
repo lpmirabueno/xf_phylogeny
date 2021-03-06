@@ -14,7 +14,7 @@ grep ',1,' all_effectors.txt | wc -l
 ```
 
 #### 2. Create a PROKKA database
-´´´
+```
 cd /home/mirabl
 prokka-genbank_to_fasta_db/data2/scratch2/mirabl/Xf_proj/Xf_effector_prediction/Preffector_results_Xf55/Effectors/Probability_1/SEQ/GFF/*.gff3 > /data2/scratch2/mirabl/Xf_proj/Xf_effector_prediction/Preffector_results_Xf55/Effectors/Probability_1/Analysis/xylella.faa
 cd-hit -i xylella.faa -o xylella -T 0 -M 0 -g 1 -s 0.8 -c 0.9
@@ -22,46 +22,46 @@ rm -fv xylella.faa xylella.bak.clstr xylella.clstr
 makeblastdb -dbtype prot -in data2/scratch2/mirabl/Xf_proj/Xf_effector_prediction/Preffector_results_Xf55/Effectors/Probability_1/Analysis/xylella
 mkdir /data2/scratch2/mirabl/Xf_proj/Xf_effector_prediction/Preffector_results_Xf55/Effectors/Probability_1/Analysis/DB_PROKKA
 mv xylella.* /data2/scratch2/mirabl/Xf_proj/Xf_effector_prediction/Preffector_results_Xf55/Effectors/Probability_1/Analysis/DB_PROKKA
-´´´
+```
 
 #### 2. Extract sequences of predicted effectors.
 Use NCBI Batch Entrez
 
 #### 3. Rename files to their strain names.
-´´´
+```
 for file in *; do
   file_short=$(basename $file | grep "$(sed s/".txt"//g)" xf_strains.csv | cut -d, -f3)
   echo $file_short
   cp "$file" "$file_short".txt
 done
-´´´
+```
 
 #### 4. Modify headers to the following format: strain|protein_ID
-´´´
+```
 mkdir /data2/scratch2/mirabl/Xf_proj/Xf_effector_prediction/Preffector_results_Xf55/Effectors/Probability_1/Analysis/Orthofinder/Formatted
 for file in /data2/scratch2/mirabl/Xf_proj/Xf_effector_prediction/Preffector_results_Xf55/Effectors/Probability_1/SEQ/FAA/*.fasta; do
   strain=$(basename $file | sed s/"_effectors1.fasta"//g);
   echo $strain;
   sed "s/>/>$strain|/" $file | sed 's/ .*//' > /data2/scratch2/mirabl/Xf_proj/Xf_effector_prediction/Preffector_results_Xf55/Effectors/Probability_1/Analysis/Orthofinder/Formatted/"$strain".faa;
 done
-´´´
+```
  
 
 #### 5. Run OrthoFinder.
 This uses an old version of OrthoFinder and Diamond. First open a new screen session.
-´´´
+```
 screen
 qlogin
 /home/hulinm/local/src/OrthoFinder-2.2.7_source/orthofinder/orthofinder.py -f /data2/scratch2/mirabl/Xf_proj/Xf_effector_prediction/Preffector_results_Xf55/Effectors/Probability_1/Analysis/Orthofinder/Formatted/ -t 16 -S diamond
-´´´
+```
 
 #### 6. Concatenate all protein FASTA files (input from step 5.).
-´´´
+```
 cat /data2/scratch2/mirabl/Xf_proj/Xf_effector_prediction/Preffector_results_Xf55/Effectors/Probability_1/Analysis/Orthofinder/Formatted/*.faa > /data2/scratch2/mirabl/Xf_proj/Xf_effector_prediction/Preffector_results_Xf55/Effectors/Probability_1/Analysis/Orthofinder/Formatted/effector_proteins.fasta
-´´´
+```
 
 #### 7. Extract FASTA sequences for each orthogroup.
-´´´
+```
 cd /data/data2/scratch2/mirabl/Xf_proj/Xf_effector_prediction/Preffector_results_Xf55/Effectors/Probability_1/Analysis/Orthofinder/Formatted/Results_Nov28
 sed s/"OG"/"orthogroup"/g Orthogroups.csv > Orthogroups2.csv
 sed s/"OG"/"orthogroup"/g SingleCopyOrthogroups.txt > SingleCopyOrthogroups2.txt
@@ -72,11 +72,11 @@ python /home/hulinm/git_repos/tools/pathogen/orthology/orthoMCL/orthoMCLgroups2f
 #  echo $file
 #  cp Fasta/"$file".faa Fasta/Single_copy
 #done
-´´´
+```
 Extract orthogroup ID from Orthofinder result.
-´´´
+```
 cut -f1 Orthogroups.csv | sed 's/OG/orthogroup//' > Orthogroups_IDs.txt
-´´´
+```
 
 ### Alignment.
 
